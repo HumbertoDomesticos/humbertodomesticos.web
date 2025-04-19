@@ -1,0 +1,20 @@
+.content{
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+.products {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  
+  .productWrapper {
+    flex: 1 1 300px; // ou um tamanho fixo se preferir
+    max-width: 300px;
+  }
+.firstRow{
+    display: flex;
+    justify-content: space-between;
+}

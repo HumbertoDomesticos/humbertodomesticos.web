@@ -1,0 +1,50 @@
+:root {
+  --primary-color: #04528E;
+  --secondary-color: #AFC6D8;
+  --tertiary-color: #4387B5;
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+} */
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  color:rgb(0, 0, 0);
+  background: #F7F7F7;
+  font-family: "Montserrat", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* width: 100%;
+  min-height: 100vh;
+  display: grid;
+  grid-template:
+      "header header header"
+      ". content ."
+      "footer footer footer" / 1fr minmax(auto, 1366px) 1fr; */
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}

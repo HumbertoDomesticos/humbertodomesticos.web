@@ -1,0 +1,14 @@
+.content{
+
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.bar{
+    background-color: var(--secondary-color);
+    min-width: 350px;
+    min-height: 1200px;
+    border-radius: 8px;
+}
