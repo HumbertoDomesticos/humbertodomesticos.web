@@ -10,14 +10,30 @@ import { BestSelledComponent } from "./components/best-seller-component";
 import { OurProductsComponent } from "./components/our-products-component";
 import { OffersDayComponent } from "./components/offers-day-component";
 import { StayInsideComponent } from "./components/stay-inside-component";
+import { TesteAPI } from "@/services/routes/isConnected/page";
+import type { AxiosResponse } from "axios";
+import { useEffect, useMemo, useState } from "react";
+import { ApiTeste, type Produto } from "@/services/api";
 
 export default function Home() {
+  const [data, setData] = useState<Produto[]>([]);
+
+  useEffect(() => {
+    TesteAPI().then((resp) => {
+      console.log('Dados recebidos:', resp);
+      setData(resp);
+    }).catch((err) => {
+      console.log(err);
+    })
+  }, []);
+
+
   return (
     <div className={styles.page}>
-      
+
       <HeaderComponent />
 
-      <OffersDayComponent />
+      {/* <OffersDayComponent />
 
       <BestSelledComponent />
 
@@ -32,9 +48,11 @@ export default function Home() {
             <Categories key={category.id} category={category.category} image={category.image} />
           ))}
         </div>
-      </div>
+      </div> */}
 
+      <ApiTeste produtos={data}/>
       <FooterComponent />
+
 
     </div>
   );
