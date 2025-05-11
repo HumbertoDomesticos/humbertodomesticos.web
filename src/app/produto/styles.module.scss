@@ -1,0 +1,130 @@
+.content {
+    background-color: var(--secondary-version-color);
+    border-radius: 8px;
+
+    .firstRow {
+        padding: 20px;
+        display: flex;
+
+        .container_imagens {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-right: 10px;
+        }
+
+        .descricao {
+            display: flex;
+            flex-direction: column;
+            margin-left: 20px;
+            // gap: 10px;
+            justify-content: space-between;
+
+            h1 {
+                font-size: 20px;
+            }
+
+            span {
+                font-size: 20px;
+                font-weight: 200;
+                color: var(--primary-color);
+            }
+
+            .preco_origial {
+                font-size: 14px;
+            }
+
+            .preco {
+                display: flex;
+                gap: 15px;
+                align-items: center;
+
+                span {
+                    font-size: 12px;
+                    color: green;
+                }
+
+                .preco_atual {
+                    font-size: 16px;
+                    color: var(--primary-color);
+                    font-weight: 600;
+                }
+            }
+
+            .text{
+                display: flex
+                ;
+                flex-direction: column;
+                gap: 12px;
+            }
+            .parcelas {
+                font-size: 12px;
+                color: var(--tertiary-color);
+            }
+
+            .estoque {
+                font-size: 14px;
+            }
+
+            input {
+                width: 340px;
+                height: 42px;
+                border-radius: 8px;
+                font-size: 14px;
+                border: none;
+                cursor: pointer;
+
+            }
+
+            // .continuar {
+            //     background-color: var(--secondary-color);
+            //     color: black;
+            // }
+
+            // .carrinho {
+            //     background-color: var(--primary-color);
+            //     color: white;
+            // }
+        }
+    }
+
+    .secondRow{
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        h2{
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+
+        p{
+            font-size: 15px;
+        }
+    }
+    
+    .thirdRow{
+        padding: 20px;
+        display: flex;
+    }
+}
+
+.route {
+    align-items: anchor-center;
+    color: var(--primary-color);
+    cursor: pointer;
+    padding: 20px 0;
+  
+    span {
+      display: flex;
+      gap: 2px;
+      align-items: anchor-center;
+    }
+  
+    p {
+      display: flex;
+      gap: 2px;
+      font-size: 14px;
+    }
+  }

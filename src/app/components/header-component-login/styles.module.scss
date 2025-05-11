@@ -1,0 +1,38 @@
+.content{
+    background-color: #04528e0e;
+    max-height: 180px;
+    // display: flex;
+    justify-content: space-between;
+    // align-items: center;
+    // flex-direction: column;  
+    display: flex;
+    padding: 10px;
+    
+    
+    // .firstRow{
+    //     display: flex; 
+    //     gap: 15px;
+    //     align-items: anchor-center;
+    //     justify-content: space-between;
+
+
+        .profile{
+            display: flex;
+            align-items: anchor-center;
+            gap: 10px;
+
+            span{
+                color: var(--primary-color);
+                font-weight: 600;
+                font-size: 20px;
+                text-align: end;
+            }
+        }
+
+        .userProfile{
+            background-color: var(--primary-color);
+            padding: 5px;
+            border-radius: 50%;
+        }
+    // }
+}
