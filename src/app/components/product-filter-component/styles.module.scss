@@ -1,14 +1,32 @@
-.content{
-
-    display: flex;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-}
-
-.bar{
-    background-color: var(--secondary-color);
+.bar {
+    background-color: var(--secondary-version-color);
     min-width: 350px;
     min-height: 1200px;
     border-radius: 8px;
+
+    h2 {
+        font-size: 18px;
+    }
+
+    .newSection {
+        display: flex;
+        gap: 10px;
+    }
+
+    .title {
+        font-size: 16px;
+        color: black;
+    }
+
+    .content {
+        padding: 20px 20px;
+        gap: 15px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    label{
+        font-size: 14px;
+        font-weight: 600;
+    }
 }
