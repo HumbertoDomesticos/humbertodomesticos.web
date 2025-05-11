@@ -3,7 +3,7 @@ import styles from './styles.module.scss'
 
 export function OffersDayComponent() {
     return (
-        <div className={styles.section}>
+        <div className={styles.section} id='ofertas-dia'>
             <h1 className={styles.title}>Ofertas do dia</h1>
             <div className={styles.productCards}>
                 {productList.map((product) => (

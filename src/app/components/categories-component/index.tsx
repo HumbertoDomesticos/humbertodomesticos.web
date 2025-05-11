@@ -41,7 +41,7 @@ interface CategoriesProps{
 
 export function Categories({category, image} : CategoriesProps){
     return(
-        <div className={styles.content}>
+        <div className={styles.content} id="categorias">
             <div className={styles.cardCategories}>
                 <Image src={image} alt={category} width={160} height={160}/>
                 <h3>{category}</h3>

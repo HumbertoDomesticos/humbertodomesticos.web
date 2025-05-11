@@ -1,4 +1,3 @@
-import { TesteAPI } from "./routes/isConnected/page";
 
 export interface Produto {
     id: number;

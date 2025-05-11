@@ -7,6 +7,7 @@ import { ProductCard, productList } from "../components/product-card-component";
 import { ProductFilter } from "../components/product-filter-component";
 import styles from './styles.module.scss';
 import { useState } from "react";
+import { CaretRight, House } from "@phosphor-icons/react";
 
 export default function NossosProdutos() {
 
@@ -20,14 +21,24 @@ export default function NossosProdutos() {
         <div>
             <HeaderComponent />
 
+            <div className={styles.route}>
+                <span>
+                    <a href="/"><House size={20} /></a>
+                    <p>
+                        <CaretRight size={14} />
+                        Nossos Produtos
+                    </p>
+                </span>
+            </div>
+            
             <div className={styles.content}>
 
                 <ProductFilter />
 
-                <div>
+                <div className={styles.productContent}>
                     <div className={styles.firstRow}>
-                        <span>25 produtos encontrados</span>
-                        <Box sx={{ minWidth: 150 }}>
+                        <span>{productList.length} produtos encontrados</span>
+                        <Box sx={{ minWidth: 200 }}>
                             <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">Relevância</InputLabel>
                                 <Select

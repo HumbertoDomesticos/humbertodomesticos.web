@@ -1,6 +1,6 @@
 'use client';
 
-import { Star } from "@phosphor-icons/react";
+import { Link, Star } from "@phosphor-icons/react";
 import styles from "./styles.module.scss";
 import Image from "next/image";
 
@@ -52,6 +52,7 @@ interface ProductCardProps{
 export function ProductCard({name, price, oldPrice} : ProductCardProps) {
     return (
         <div className={styles.content}>
+              {/* <Link href={'/produto'} className={styles.content}> */}
             <div className={styles.card}>
                 <div className={styles.cardImage}>
                     {/* Imagem do produto */}
@@ -92,6 +93,7 @@ export function ProductCard({name, price, oldPrice} : ProductCardProps) {
                     </div>
                 </div>
             </div>
+            {/* </Link> */}
         </div>
     )
 }
