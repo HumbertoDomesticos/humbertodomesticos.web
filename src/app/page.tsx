@@ -10,10 +10,10 @@ import { BestSelledComponent } from "./components/best-seller-component";
 import { OurProductsComponent } from "./components/our-products-component";
 import { OffersDayComponent } from "./components/offers-day-component";
 import { StayInsideComponent } from "./components/stay-inside-component";
-import { TesteAPI } from "@/services/routes/isConnected/page";
 import type { AxiosResponse } from "axios";
 import { useEffect, useMemo, useState } from "react";
 import { ApiTeste, type Produto } from "@/services/api";
+import { TesteAPI } from "@/services/routes/produtos/page";
 
 export default function Home() {
   const [data, setData] = useState<Produto[]>([]);
@@ -33,7 +33,7 @@ export default function Home() {
 
       <HeaderComponent />
 
-      {/* <OffersDayComponent />
+      <OffersDayComponent />
 
       <BestSelledComponent />
 
@@ -48,9 +48,10 @@ export default function Home() {
             <Categories key={category.id} category={category.category} image={category.image} />
           ))}
         </div>
-      </div> */}
+      </div>
 
       <ApiTeste produtos={data}/>
+
       <FooterComponent />
 
 
