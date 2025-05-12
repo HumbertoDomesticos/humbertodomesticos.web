@@ -32,7 +32,7 @@ export default function Login() {
                         <h2>Quero criar uma conta</h2>
                         <Box
                             component="form"
-                            sx={{ '& .MuiTextField-root': { width: "486.43px" } }}
+                            // sx={{ '& .MuiTextField-root': { width: "486.43px" } }}
                             noValidate
                             autoComplete="off"
                             className={styles.input}
@@ -41,7 +41,7 @@ export default function Login() {
 
                         </Box>
 
-                        <a href="/"><Button variant="contained" href="/" sx={{ backgroundColor: "var(--primary-color)",  width:"486.43px",  height: "56px", marginTop: "15px", textTransform: "none" }}>Continuar</Button></a>
+                        <a href="/"><Button variant="contained" href="/" sx={{ backgroundColor: "var(--primary-color)",  marginTop: "15px", textTransform: "none" }}>Continuar</Button></a>
                     </div>
 
                     <div className={styles.forms}>
@@ -81,7 +81,7 @@ export default function Login() {
 
                         </Box>
 
-                        <a href="/"><Button variant="contained" href="/" sx={{ backgroundColor: "var(--primary-color)",  width:"486.43px",  height: "56px", marginTop: "15px", textTransform: "none" }}>Continuar</Button></a>
+                        <a href="/"><Button variant="contained" href="/" sx={{ backgroundColor: "var(--primary-color)", marginTop: "15px", textTransform: "none" }}>Continuar</Button></a>
 
                     </div>
                 </div>

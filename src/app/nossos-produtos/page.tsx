@@ -21,7 +21,7 @@ export default function NossosProdutos() {
         <div>
             <HeaderComponent />
 
-            <div className={styles.route}>
+            <div className={`${styles.route} container_info`}>
                 <span>
                     <a href="/"><House size={20} /></a>
                     <p>
@@ -31,7 +31,7 @@ export default function NossosProdutos() {
                 </span>
             </div>
             
-            <div className={styles.content}>
+            <div className={`${styles.content} container_info`}>
 
                 <ProductFilter />
 

@@ -16,7 +16,7 @@
     .center {
         display: flex;
         justify-content: space-around;
-        margin-top: 15px;
+        // margin-top: 15px;
 
         .forms {
             display: flex;
@@ -37,10 +37,10 @@
                 flex-direction: column;
             }
 
-            input{
-                width: 428.43px;
-                
-            }
+            // input{
+            //     width: 428.43px;
+            //     height: 36.5px;
+            // }
 
         }
     }
