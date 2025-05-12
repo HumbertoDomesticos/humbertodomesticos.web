@@ -1,0 +1,111 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.first_column {
+    display: flex;
+    flex-direction: column;
+    margin-top: 25px;
+    gap: 25px;
+
+    .user_info {
+        display: flex;
+        gap: 10px;
+        font-size: 16px;
+
+        .user {
+            display: flex;
+            flex-direction: column;
+
+            p {
+                font-weight: 600;
+            }
+
+        }
+    }
+
+    .user_editar {
+        display: flex;
+        gap: 5px;
+        align-items: anchor_center;
+    }
+}
+
+.second_column {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--secondary-version-color);
+    width: 1031px;
+    border-radius: 8px;
+    padding: 25px;
+
+    h1 {
+        font-size: 18px;
+    }
+
+    span {
+        font-size: 14px;
+        font-weight: 200;
+    }
+
+    .content {
+        margin-top: 15px;
+        display: flex;
+        justify-content: space-between;
+
+        .info_all {
+            display: flex;
+            justify-content: space-around;
+            gap: 120px;
+            // align-items: anchor-center;
+
+            .user_info {
+                p {
+                    margin-top: 8px;
+                    font-size: 16px;
+                    font-weight: 600;
+                }
+            }
+
+            .user {
+                p {
+                    margin-top: 8px;
+                    font-weight: 200;
+
+                }
+
+                .flex {
+                    display: flex;
+                    gap: 20px;
+                    align-items: end;
+                    justify-content: space-between;
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .profile_picture {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            p {
+                margin-top: 10px;
+                font-size: 14px;
+                font-weight: 200;
+                max-width: 300px;
+                text-align: center;
+            }
+
+        }
+
+    }
+
+    .button {
+        margin-top: 20px;
+    }
+
+}
