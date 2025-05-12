@@ -3,7 +3,7 @@ import styles from './styles.module.scss'
 
 export function OurProductsComponent() {
   return (
-    <div className={styles.section}>
+    <div className={`${styles.section} container_info`}>
       <div className={styles.sectionOurProducts}>
         <h1 className={styles.title}>Nossos produtos</h1>
         <a href="/nossos-produtos"><p>Ver mais</p></a>

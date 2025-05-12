@@ -12,7 +12,7 @@ export default function ProductDetails() {
         <>
             <HeaderComponent />
 
-            <div className={styles.route}>
+            <div className={`${styles.route} container_info`}>
                 <span>
                     <a href="/"><House size={20} /></a>
                     <p>
@@ -22,7 +22,7 @@ export default function ProductDetails() {
                 </span>
             </div>
 
-            <div className={styles.content}>
+            <div className={`${styles.content} container_info`}>
 
                 <div className={styles.firstRow}>
                     <div className={styles.container_imagens}>

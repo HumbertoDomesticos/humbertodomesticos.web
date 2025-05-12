@@ -32,14 +32,14 @@ export function HeaderComponent() {
                 <div className={styles.icons}>
                     <Heart size={24} color="var(--primary-color)" style={{ cursor: "pointer" }} />
                     <a href="/carrinho-de-compras"><ShoppingCart size={24} color="var(--primary-color)" style={{ cursor: "pointer" }} /></a>
-                <div className={styles.profile}>
-                    <a href="/login"><p>
-                        Faça login <br /> ou cadastre-se
-                    </p></a>
-                    <div className={styles.userProfile}>
-                        <User size={24} color='white' />
+                    <div className={styles.profile}>
+                        <a href="/login"><p>
+                            Faça login <br /> ou cadastre-se
+                        </p></a>
+                        <div className={styles.userProfile}>
+                            <a href="/meu-perfil"><User size={24} color='white' /></a>
+                        </div>
                     </div>
-                </div>
                 </div>
             </div>
 

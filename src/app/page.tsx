@@ -41,7 +41,7 @@ export default function Home() {
 
       <StayInsideComponent />
 
-      <div className={styles.section}>
+      <div className={`${styles.section} container_info`}>
         <h1 className={styles.title}>Categorias</h1>
         <div className={styles.cardCategories}>
           {categoriesList.map((category) => (

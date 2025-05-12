@@ -3,7 +3,7 @@ import styles from "./styles.module.scss";
 
 export function BestSelledComponent(){
     return(
-        <div className={styles.section} id="mais-vendidos">
+        <div className={`${styles.section} container_info`} id="mais-vendidos">
         <h1 className={styles.title}>Mais Vendidos</h1>
         <div className={styles.productCards}>
           {productList.map((product) => (

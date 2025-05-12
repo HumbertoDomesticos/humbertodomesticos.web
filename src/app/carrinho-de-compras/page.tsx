@@ -15,7 +15,7 @@ export default function CarrinhoCompras() {
             <HeaderComponent />
             {/* rota */}
 
-            <div className={styles.route}>
+            <div className={`${styles.route} container_info`}>
                 <span>
                     <a href="/"><House size={20} /></a>
                     <p>
@@ -26,7 +26,7 @@ export default function CarrinhoCompras() {
             </div>
 
             {/* carrinho info */}
-            <div className={styles.container}>
+            <div className={`${styles.container} container_info`}>
                 <Image src={"/carrinho.png"} alt={""} width={144} height={144} />
                 <div className={styles.carrinho_vazio}>
                     <span>Seu carrinho de compras está vazio</span>

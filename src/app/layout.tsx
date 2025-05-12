@@ -25,7 +25,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body>
-        {children}
+        <main>
+          {children}
+        </main>
       </body>
     </html>
   );

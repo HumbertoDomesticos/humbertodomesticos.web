@@ -3,7 +3,7 @@ import styles from './styles.module.scss'
 
 export function StayInsideComponent(){
     return (
-        <div className={styles.section} id='fique-dentro'>
+        <div className={`${styles.section} container_info`} id='fique-dentro'>
         <h1 className={styles.title}>Fique por dentro</h1>
         <div className={styles.banners}>
           <div>
