@@ -1,34 +1,160 @@
 .container {
-    background-color: #04528e0e;
-    min-height: 323px;
-    width: auto;
+  background-color: var(--secondary-version-color);
+  min-height: 323px;
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+
+  .carrinho_vazio {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
+    gap: 5px;
+  }
+}
 
-    .carrinho_vazio{
+.contentCarrinho {
+  display: flex;
+  justify-content: space-between;
+
+
+  h1 {
+    font-size: 16px;
+    margin: 20px 20px 0 10px;
+    text-transform: uppercase;
+  }
+
+  .containerCarrinho {
+    width: 700px;
+    background-color: var(--secondary-version-color);
+    border-radius: 8px;
+
+    .produto {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px;
+
+      .produtoAll {
+        display: flex;
+        gap: 10px;
+
+        .produtoInfo {
+          display: flex;
+          flex-direction: column;
+          width: 300px;
+          justify-content: space-between;
+        }
+      }
+
+      .prices {
+        display: flex;
+        flex-direction: column;
+        align-items: end;
+        justify-content: space-between;
+
+        p {
+          font-size: 14px;
+          text-align: end;
+        }
+
+        span {
+          font-size: 16px;
+          font-weight: 700;
+          color: var(--primary-color);
+        }
+
+        .excluir {
+          color: red;
+          font-size: 14px;
+          font-weight: 500;
+        }
+      }
+    }
+
+  }
+
+  .containerCompra {
+    width: 500px;
+    background-color: var(--secondary-version-color);
+    border-radius: 8px;
+
+
+    .produtoResumo {
+      padding: 20px;
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      // justify-content: space-between;
+      gap: 40px;
     }
+
+    .aside {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+
+      span {
+        font-weight: 700;
+      }
+    }
+  }
+
 }
 
 .route {
+  align-items: anchor-center;
+  color: var(--primary-color);
+  cursor: pointer;
+
+  span {
+    display: flex;
+    gap: 2px;
     align-items: anchor-center;
-    color: var(--primary-color);
-    cursor: pointer;
-  
-    span {
-      display: flex;
-      gap: 2px;
-      align-items: anchor-center;
-    }
-  
-    p {
-      display: flex;
-      gap: 2px;
-      font-size: 14px;
-    }
   }
+
+  p {
+    display: flex;
+    gap: 2px;
+    font-size: 14px;
+  }
+}
+
+.quantity_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: #e6f1fb;
+  width: fit-content;
+
+}
+
+.quantity_container button {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background-color: unset;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  color: black;
+
+}
+
+.quantity_container button:hover {
+  background-color: #d6eaff;
+}
+
+.quantity_container input {
+  width: 50px;
+  height: 30px;
+  border: none;
+  text-align: center;
+  font-size: 14px;
+  background-color: unset;
+  color: black;
+
+}
