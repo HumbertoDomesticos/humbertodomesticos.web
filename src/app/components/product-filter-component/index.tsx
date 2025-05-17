@@ -1,15 +1,45 @@
 import { Radio, Square, Truck } from "@phosphor-icons/react"
 import styles from "./styles.module.scss"
 import { FormControl, FormLabel, RadioGroup, FormControlLabel, Checkbox } from "@mui/material"
-import { useState } from "react";
-import React from "react";
+import { useEffect, useState } from "react";
+import { getProduto, Produto } from "@/services/routes/produtos/page";
+import { type Categoria, getCategoria } from "@/services/routes/categorias/page";
 
 export function ProductFilter() {
-    const [checked, setChecked] = React.useState(true);
+    const [categoriasSelecionadas, setCategoriasSelecionadas] = useState<number[]>([]);
+    const [marcasSelecionadas, setMarcasSelecionadas] = useState<string[]>([]);
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setChecked(event.target.checked);
+
+    const handleChangeCategoria = (event: React.ChangeEvent<HTMLInputElement>, idCategoria: number) => {
+        if (event.target.checked) {
+            setCategoriasSelecionadas((prev) => [...prev, idCategoria]);
+        } else {
+            setCategoriasSelecionadas((prev) => prev.filter((id) => id !== idCategoria));
+        }
     };
+
+    const handleChangeMarca = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const marca = event.target.value;
+        if (event.target.checked) {
+            setMarcasSelecionadas((prev) => [...prev, marca]);
+        } else {
+            setMarcasSelecionadas((prev) => prev.filter((m) => m !== marca));
+        }
+    };
+    const [categorias, setCategorias] = useState<Categoria[]>([]);
+
+    useEffect(() => {
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+        getCategoria().then((resp: any) => {
+            setCategorias(resp);
+        }).catch((err) => {
+            console.log(err);
+        })
+    }, []);
+
+
+
+
     return (
         <>
             <div className={styles.bar}>
@@ -22,133 +52,42 @@ export function ProductFilter() {
                     <div>
                         <FormControl>
                             <FormLabel className={styles.title}>Categoria</FormLabel>
+                            {categorias.map((categoria) => (
+                                <>
+                                    <FormControlLabel key={categoria.id_categoria} value={categoria.descritivo_categoria} sx={{ marginLeft: 1 }} control={<Checkbox
+                                        size="small"
+                                        checked={categoriasSelecionadas.includes(categoria.id_categoria)}
+                                        onChange={(e) => handleChangeCategoria(e, categoria.id_categoria)} />
 
-                            <FormControlLabel value="female" sx={{marginLeft: 1}} control={<Checkbox
-                                size="small"
-                                checked={checked}
-                                onChange={handleChange} />
-
-                            } label="Male" />
-
-                            <FormControlLabel value="male" sx={{marginLeft: 1}} control={<Checkbox
-                                size="small"
-                                checked={checked}
-                                onChange={handleChange} />
-
-                            } label="Male" />
-                            <FormControlLabel value="female" sx={{marginLeft: 1}} control={<Checkbox
-                                size="small"
-                                checked={checked}
-                                onChange={handleChange} />
-
-                            } label="Female" />
-                            <FormControlLabel value="male"  sx={{marginLeft: 1}}control={<Checkbox
-                                size="small"
-                                checked={checked}
-                                onChange={handleChange} />
-
-                            } label="Male" />
-                            <FormControlLabel value="female" sx={{marginLeft: 1}} control={<Checkbox
-                                size="small"
-                                checked={checked}
-                                onChange={handleChange} />
-
-                            } label="Female" />
-                            <FormControlLabel value="male"  sx={{marginLeft: 1}}control={<Checkbox
-                                size="small"
-                                checked={checked}
-                                onChange={handleChange} />
-
-                            } label="Male" />
+                                    } label={categoria.descritivo_categoria} />
+                                </>
+                            ))}
                         </FormControl>
+
                     </div>
                     <div>
                         <FormControl>
                             <FormLabel className={styles.title}>Marca</FormLabel>
 
-                            <FormControlLabel value="female" sx={{marginLeft: 1}} control={<Checkbox
-                                size="small"
-                                checked={checked}
-                                onChange={handleChange} />
+                            {["Brastemp", "Electrolux", "LG", "Samsung", "Consul", "Philco"].map((marca) => (
+                                <FormControlLabel
+                                    key={marca}
+                                    value={marca}
+                                    sx={{ marginLeft: 1 }}
+                                    control={
+                                        <Checkbox
+                                            size="small"
+                                            checked={marcasSelecionadas.includes(marca)}
+                                            onChange={handleChangeMarca}
+                                        />
+                                    }
+                                    label={marca}
+                                />
+                            ))}
 
-                            } label="Female" />
-                            <FormControlLabel value="male"  sx={{marginLeft: 1}}control={<Checkbox
-                                size="small"
-                                checked={checked}
-                                onChange={handleChange} />
-
-                            } label="Male" />
-                            <FormControlLabel value="other" sx={{marginLeft: 1}} control={<Checkbox
-                                size="small"
-                                checked={checked}
-                                onChange={handleChange} />
-
-                            } label="Other" />
-                            <FormControlLabel value="female" sx={{marginLeft: 1}} control={<Checkbox
-                                size="small"
-                                checked={checked}
-                                onChange={handleChange} />
-
-                            } label="Female" />
-                            <FormControlLabel value="male"  sx={{marginLeft: 1}}control={<Checkbox
-                                size="small"
-                                checked={checked}
-                                onChange={handleChange} />
-
-                            } label="Male" />
-                            <FormControlLabel value="other" sx={{marginLeft: 1}} control={<Checkbox
-                                size="small"
-                                checked={checked}
-                                onChange={handleChange} />
-
-                            } label="Other" />
-                        </FormControl>
-                    </div>
-                    <div>
-                        <FormControl>
-                            <FormLabel className={styles.title}>Entrega</FormLabel>
-
-                            <FormControlLabel value="female" sx={{marginLeft: 1}} control={<Checkbox
-                                size="small"
-                                checked={checked}
-                                onChange={handleChange} />
-
-                            } label="Female" />
-                            <FormControlLabel value="male"  sx={{marginLeft: 1}}control={<Checkbox
-                                size="small"
-                                checked={checked}
-                                onChange={handleChange} />
-
-                            } label="Male" />
-                            <FormControlLabel value="other" sx={{marginLeft: 1}} control={<Checkbox
-                                size="small"
-                                checked={checked}
-                                onChange={handleChange} />
-
-                            } label="Other" />
-                            <FormControlLabel value="female" sx={{marginLeft: 1}} control={<Checkbox
-                                size="small"
-                                checked={checked}
-                                onChange={handleChange} />
-
-                            } label="Female" />
-                            <FormControlLabel value="male"  sx={{marginLeft: 1}}control={<Checkbox
-                                size="small"
-                                checked={checked}
-                                onChange={handleChange} />
-
-                            } label="Male" />
-                            <FormControlLabel value="other" sx={{marginLeft: 1}} control={<Checkbox
-                                size="small"
-                                checked={checked}
-                                onChange={handleChange} />
-
-                            } label="Other" />
                         </FormControl>
                     </div>
                 </div>
-
-
             </div>
         </>
     )

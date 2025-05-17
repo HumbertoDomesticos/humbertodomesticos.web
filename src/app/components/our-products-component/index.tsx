@@ -1,16 +1,20 @@
-import { ProductCard, productList } from '../product-card-component'
+import { ProductCard } from '../product-card-component'
 import styles from './styles.module.scss'
+import Link from 'next/link'
+import type { Produto, ProdutoApi } from '@/services/routes/produtos/page'
 
-export function OurProductsComponent() {
+export function OurProductsComponent({ produtos }: ProdutoApi) {
   return (
     <div className={`${styles.section} container_info`}>
       <div className={styles.sectionOurProducts}>
         <h1 className={styles.title}>Nossos produtos</h1>
-        <a href="/nossos-produtos"><p>Ver mais</p></a>
+        <Link href="/nossos-produtos"><p>Ver mais</p></Link>
       </div>
       <div className={styles.productCards}>
-        {productList.map((product) => (
-          <ProductCard key={product.id} name={product.name} price={product.price} oldPrice={product.oldPrice} />
+        {produtos.map((product) => (
+          <Link key={product.id_prod} href={`/produto/${product.id_prod}`} passHref>
+            <ProductCard key={product.id_prod} name={product.nome_prod} price={product.preco_produto} />
+          </Link>
         ))}
       </div>
     </div>

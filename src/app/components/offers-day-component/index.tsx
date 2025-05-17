@@ -1,21 +1,25 @@
 import Link from 'next/link';
-import { ProductCard, productList } from '../product-card-component'
 import styles from './styles.module.scss'
-import { useRouter } from 'next/router';
+import { ProductCardPromo } from '../product-card-component-promo';
+import type { ProdutoApi } from '@/services/routes/produtos/page';
 
-export function OffersDayComponent() {
-
+export function OffersDayComponent({ produtos }: ProdutoApi) {
     return (
         <div className={`${styles.section} container_info`} id='ofertas-dia'>
             <h1 className={styles.title}>Ofertas do dia</h1>
-            <Link href="/produto">
+            <div className={styles.productCards}>
+                {produtos.map((product) => (
+                    <Link key={product.id_prod} href={`/produto-promo/${product.id_prod}`} passHref>
+                        <ProductCardPromo
+                            name={product.nome_prod}
+                            price={product.desconto_preco_produto}
+                            oldPrice={product.preco_produto}
+                            promo={product.desconto_prod}
+                        />
+                    </Link>
+                ))}
 
-                <div className={styles.productCards}>
-                    {productList.map((product) => (
-                        <ProductCard key={product.id} name={product.name} price={product.price} oldPrice={product.oldPrice} />
-                    ))}
-                </div>
-            </Link>
+            </div>
         </div >
     )
 }
