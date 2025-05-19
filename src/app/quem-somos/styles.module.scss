@@ -1,0 +1,19 @@
+
+.route {
+    align-items: anchor-center;
+    color: var(--primary-color);
+    cursor: pointer;
+    padding: 20px 0;
+  
+    span {
+      display: flex;
+      gap: 2px;
+      align-items: anchor-center;
+    }
+  
+    p {
+      display: flex;
+      gap: 2px;
+      font-size: 14px;
+    }
+  }
