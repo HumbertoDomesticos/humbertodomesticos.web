@@ -18,3 +18,91 @@
     // justify-content: center;
     align-items: center;
 }
+
+.carouselContainer {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+}
+
+.productCards {
+    display: flex;
+    flex: 1;
+    gap: 16px;
+    overflow: hidden;
+}
+
+.carouselButton {
+    background: var(--secondary-color);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    
+    &:hover {
+        background: var(--primary-color);
+    }
+    
+    &:focus {
+        outline: none;
+        // box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.productCards {
+    display: flex;
+    flex: 1;
+    gap: 16px;
+    overflow: hidden;
+    transition: transform 0.5s ease;
+    
+    &.left {
+        animation: slideFromLeft 0.5s ease;
+    }
+    
+    &.right {
+        animation: slideFromRight 0.5s ease;
+    }
+}
+
+@keyframes slideFromLeft {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideFromRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.indicators {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ddd;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    
+    &.active {
+        background: var(--primary-color);
+    }
+    
+    &:focus {
+        outline: none;
+    }
+}

@@ -2,14 +2,16 @@ import type { AxiosResponse } from "axios";
 import axios from "axios";
 
 
-export interface Usuario {
+export type Usuario = {
   id_usuario: number;
   nome_usuario: string;
   cpf_usuario: string;
   email_usuario: string;
-  data_nasc_usuario: number;
   senha_usuario: string;
+  senha_usuario_temp: string;
+  data_nasc_usuario: string;
 }
+
 
 export async function getUsuario(): Promise<AxiosResponse> {
   try {

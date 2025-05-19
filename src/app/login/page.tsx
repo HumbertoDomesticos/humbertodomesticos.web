@@ -1,10 +1,11 @@
 'use client';
 
-import { Box, Button, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from "@mui/material";
+import { Box, Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from "@mui/material";
 import { HeaderComponentLogin } from "../components/header-component-login";
 import styles from "./styles.module.scss"
 import { Eye, EyeClosed } from "@phosphor-icons/react";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
@@ -22,7 +23,7 @@ export default function Login() {
         <div >
             <HeaderComponentLogin />
 
-            <div className={styles.content}>
+            <div className={`${styles.content}  container_info`}>
                 <h1>Faça login ou crie uma conta</h1>
 
                 <div className={styles.center}>
@@ -41,7 +42,7 @@ export default function Login() {
 
                         </Box>
 
-                        <a href="/"><Button variant="contained" href="/" sx={{ backgroundColor: "var(--primary-color)",  marginTop: "15px", textTransform: "none" }}>Continuar</Button></a>
+                        <Link href="/cadastro"><Button variant="contained" href="/" sx={{ backgroundColor: "var(--primary-color)",  marginTop: "15px", textTransform: "none" }}>Continuar</Button></Link>
                     </div>
 
                     <div className={styles.forms}>
@@ -56,32 +57,33 @@ export default function Login() {
                         >
                             <TextField id="outlined-basic" label="E-mail, CPF ou CNPJ" variant="outlined" />
 
-                            {/* <InputLabel htmlFor="outlined-adornment-password">Senha</InputLabel> */}
-                            <OutlinedInput
-                                id="outlined-adornment-password"
-                                type={showPassword ? 'text' : 'password'}
-
-                                endAdornment={
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            aria-label={
-                                                showPassword ? 'hide the password' : 'display the password'
-                                            }
-                                            onClick={handleClickShowPassword}
-                                            onMouseDown={handleMouseDownPassword}
-                                            onMouseUp={handleMouseUpPassword}
-                                            edge="end"
-                                        >
+                             <FormControl sx={{ width: '25ch' }} variant="outlined">
+                                <InputLabel htmlFor="outlined-adornment-password">Senha</InputLabel>
+                                <OutlinedInput
+                                    id="outlined-adornment-password"
+                                    type={showPassword ? 'text' : 'senha'}
+                                    endAdornment={
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                aria-label={
+                                                    showPassword ? 'hide the password' : 'display the password'
+                                                }
+                                                onClick={handleClickShowPassword}
+                                                onMouseDown={handleMouseDownPassword}
+                                                onMouseUp={handleMouseUpPassword}
+                                                edge="end"
+                                            >
                                             {showPassword ? <Eye size={18} /> : <EyeClosed size={18} />}
-                                        </IconButton>
-                                    </InputAdornment>
-                                }
-                                label="Senha"
-                            />
+                                            </IconButton>
+                                        </InputAdornment>
+                                    }
+                                    label="Password"
+                                />
+                            </FormControl>
 
                         </Box>
 
-                        <a href="/"><Button variant="contained" href="/" sx={{ backgroundColor: "var(--primary-color)", marginTop: "15px", textTransform: "none" }}>Continuar</Button></a>
+                        <Link href="/"><Button variant="contained" href="/" sx={{ backgroundColor: "var(--primary-color)", marginTop: "15px", textTransform: "none" }}>Continuar</Button></Link>
 
                     </div>
                 </div>
