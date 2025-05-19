@@ -41,7 +41,7 @@ export default function ProductDetails() {
 
             <div className={`${styles.route} container_info`}>
                 <span>
-                    <a href="/"><House size={20} /></a>
+                    <Link href="/"><House size={20} /></Link>
                     <p>
                         <CaretRight size={14} />
                         Ofertas do dia
@@ -74,14 +74,12 @@ export default function ProductDetails() {
 
                         <div >
                             <p className={styles.estoque}>Em estoque</p>
-                            <p className={styles.estoque}>{product.estoque_prod}</p>
+                            <p className={styles.estoque}>{product.estoque_prod} unidades restantes</p>
                             {/* <input type="submit" value="Continuar a compra" className={styles.continuar} /> */}
 
-                            <Link href="/" >
                                 <Button variant="contained" href="/" sx={{
                                     backgroundColor: "var(--secondary-color)", width: "486.43px", height: "56px", marginTop: "15px", textTransform: "none", color: "black", boxShadow: 'none',
                                 }}>Continuar a compra</Button>
-                            </Link>
 
                             <Button
                                 variant="contained"

@@ -4,14 +4,15 @@ import Image from 'next/image'
 import styles from './styles.module.scss'
 import { Heart, MagnifyingGlass, MapPin, ShoppingCart, User } from '@phosphor-icons/react'
 import { IconButton, InputBase, Paper, TextField } from '@mui/material'
+import Link from 'next/link';
 
 export function HeaderComponent() {
     return (
         <div className={styles.content}>
             <div className={styles.firstRow}>
                 <div>
-                    <Image src={"/images/logo.png"} alt={''} width={80} height={70}>
-                    </Image>
+                    <Link href="/"><Image src={"/images/logo.png"} alt={''} width={80} height={70}>
+                    </Image></Link>
                 </div>
                 <div>
                     <Paper
@@ -31,13 +32,13 @@ export function HeaderComponent() {
                 </div>
                 <div className={styles.icons}>
                     <Heart size={24} color="var(--primary-color)" style={{ cursor: "pointer" }} />
-                    <a href="/carrinho-de-compras"><ShoppingCart size={24} color="var(--primary-color)" style={{ cursor: "pointer" }} /></a>
+                    <Link href="/carrinho-de-compras"><ShoppingCart size={24} color="var(--primary-color)" style={{ cursor: "pointer" }} /></Link>
                     <div className={styles.profile}>
-                        <a href="/login"><p>
-                            Faça login <br /> ou cadastre-se
-                        </p></a>
+                        <Link href="/login">
+                            <p>Faça login <br /> ou cadastre-se
+                            </p></Link>
                         <div className={styles.userProfile}>
-                            <a href="/meu-perfil"><User size={24} color='white' /></a>
+                            <Link href="/meu-perfil"><User size={24} color='white' /></Link>
                         </div>
                     </div>
                 </div>
@@ -53,13 +54,13 @@ export function HeaderComponent() {
                 </div>
                 <div className={styles.menu}>
                     {/* Menu */}
-                    <a href='/#categorias'>Categorias</a>
-                    <a href='/#ofertas-dia'>Ofertas do dia</a>
-                    <a href='/#mais-vendidos'>Mais vendidos</a>
-                    {/* <a href='/'>Frete grátis</a> */}
-                    <a href='/#fique-dentro'>Fique por dentro</a>
+                    {/* <Link href='/#categorias'>Categorias</Link> */}
+                    <Link href='/quem-somos'>Sobre nós</Link>
+                    <Link href='/#ofertas-dia'>Ofertas do dia</Link>
+                    <Link href='/#mais-vendidos'>Mais vendidos</Link>
+                    <Link href='/#fique-dentro'>Fique por dentro</Link>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }

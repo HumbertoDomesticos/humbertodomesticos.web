@@ -10,16 +10,18 @@ import { useEffect, useState } from "react";
 import { getProduto, type Produto } from "@/services/routes/produtos/page";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { useProduto } from "@/app/context/ProdutosContext";
 
 
 export default function ProductPromoDetails() {
 
     const params = useParams();
     const productId = Number(params.id); // pegar id da rota
-
+    const { adicionarAoCarrinho, quantidadeItens } = useProduto();
     const [data, setData] = useState<Produto[]>([]);
 
     useEffect(() => {
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         getProduto().then((resp: any) => {
             setData(resp);
         }).catch((err) => {
@@ -34,13 +36,20 @@ export default function ProductPromoDetails() {
     }
 
 
+    const handleAdicionarAoCarrinho = () => {
+        adicionarAoCarrinho(product);
+        // Você pode adicionar um feedback visual aqui (toast, alert, etc.)
+        alert(`${product.nome_prod} foi adicionado ao carrinho!`);
+    };
+
+
     return (
         <>
             <HeaderComponent />
 
             <div className={`${styles.route} container_info`}>
                 <span>
-                    <a href="/"><House size={20} /></a>
+                    <Link href="/"><House size={20} /></Link>
                     <p>
                         <CaretRight size={14} />
                         Ofertas do dia
@@ -75,7 +84,7 @@ export default function ProductPromoDetails() {
 
                         <div >
                             <p className={styles.estoque}>Em estoque</p>
-                            <p className={styles.estoque}>{product.estoque_prod}</p>
+                            <p className={styles.estoque}>{product.estoque_prod} unidades restantes</p>
                             {/* <input type="submit" value="Continuar a compra" className={styles.continuar} /> */}
 
                             <Link href="/" >
@@ -87,10 +96,8 @@ export default function ProductPromoDetails() {
                             <Button
                                 variant="contained"
                                 sx={{ backgroundColor: "var(--primary-color)", width: "486.43px", height: "56px", marginTop: "15px", textTransform: "none", boxShadow: 'none' }}
-                            // onclick={() => handleSaveProduct(productId)}
+                                onClick={handleAdicionarAoCarrinho}
                             >Adicionar ao carrinho</Button>
-
-                            {/* <input type="submit" value="Adicionar ao carrinho" className={styles.carrinho} /> */}
                         </div>
 
 
