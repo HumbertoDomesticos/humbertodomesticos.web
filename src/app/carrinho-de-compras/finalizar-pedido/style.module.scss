@@ -1,0 +1,35 @@
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .section{
+        border-radius:  8px;
+        padding: 20px;
+        background-color: var(--secondary-version-color);
+
+        h1{
+            font-size: 16px;
+            font-weight: 700;
+        }
+    }
+}
+
+.route {
+    align-items: anchor-center;
+    color: var(--primary-color);
+    cursor: pointer;
+    padding: 20px 0;
+  
+    span {
+      display: flex;
+      gap: 2px;
+      align-items: anchor-center;
+    }
+  
+    p {
+      display: flex;
+      gap: 2px;
+      font-size: 14px;
+    }
+  }

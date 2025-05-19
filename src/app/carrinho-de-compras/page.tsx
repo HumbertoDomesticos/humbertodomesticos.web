@@ -9,6 +9,8 @@ import Image from "next/image";
 import { House, CaretRight } from "@phosphor-icons/react";
 import { type Produto, getProduto } from "@/services/routes/produtos/page";
 import { useState, useEffect } from "react";
+import ProdutoParaComprar from "../components/buying-product-component/page";
+import { useProduto } from "../context/ProdutosContext";
 
 export default function CarrinhoCompras() {
 
@@ -23,35 +25,9 @@ export default function CarrinhoCompras() {
         })
     }, []);
 
+    const { carrinho, removerDoCarrinho, limparCarrinho, quantidadeItens } = useProduto();
 
-    const [value, setValue] = useState(1);
-
-    const handleDecrement = () => {
-        setValue((prev) => Math.max(1, prev - 1));
-    };
-
-    const handleIncrement = () => {
-        setValue((prev) => Math.min(99, prev + 1));
-    };
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = Number.parseInt(e.target.value, 10);
-
-        // biome-ignore lint/suspicious/noGlobalIsNan: <explanation>
-        if (isNaN(newValue)) {
-            setValue(1);
-            return;
-        }
-
-        if (newValue < 1) {
-            setValue(1);
-        } else if (newValue > 99) {
-            setValue(99);
-        } else {
-            setValue(newValue);
-        }
-    };
-
+    console.log(carrinho)
 
     return (
         <div>
@@ -85,66 +61,38 @@ export default function CarrinhoCompras() {
                 <div className={styles.containerCarrinho}>
                     <h1>Seus produtos</h1>
 
-                    <div className={styles.produto}>
-                        <div className={styles.produtoAll}>
-                            <div>
-                                <Image src={"/products/lavaeseca.png"} alt={""} width={90} height={80} />
-                            </div>
-
-                            <div className={styles.produtoInfo}>
-                                <p>Lava e Seca Philco 16 Programas Eco Inverter 10 kg Inox PLS11T</p>
-                                <div className={styles.quantity_container}>
-                                    <button type="button" onClick={handleDecrement}>-</button>
-                                    <input
-                                        type="number"
-                                        value={value}
-                                        onChange={handleChange}
-                                        min={1}
-                                        max={99}
-                                    />
-                                    <button type="button" onClick={handleIncrement}>+</button>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <div className={styles.prices}>
-                            <div>
-                                <p>De R$4.094,00</p>
-                                <span>Por R$2.880,47</span>
-                            </div>
-                            <span className={styles.excluir}>Excluir</span>
-                        </div>
-
-                    </div>
+                    <ProdutoParaComprar isBuying={false} />
 
                 </div>
 
                 <div className={styles.containerCompra}>
                     <h1>Resumo da compra</h1>
 
-                    <div className={styles.produtoResumo}>
-                        <div>
-                            <div className={styles.aside}>
-                                <p>Produto (1)</p>
-                                <p>R$2.880,47</p>
+                    {carrinho.map((produto) => (
+                        <div className={styles.produtoResumo} key={produto.id_prod}>
+                            <div>
+                                <div className={styles.aside}>
+                                    <p>Produto ({carrinho.length})</p>
+                                    <p>{produto.desconto_preco_produto}</p>
+                                </div>
+                                <div className={styles.aside}>
+                                    <p>Frete</p>
+                                    <p>Grátis</p>
+                                </div>
                             </div>
+
                             <div className={styles.aside}>
-                                <p>Frete</p>
-                                <p>Grátis</p>
+                                <span>Total</span>
+                                <span>{produto.desconto_preco_produto}</span>
                             </div>
-                        </div>
 
-                        <div className={styles.aside}>
-                            <span>Total</span>
-                            <span>R$2.880,47</span>
+                            <Button variant="contained" href="/carrinho-de-compras/finalizar-pedido" sx={{
+                                backgroundColor: "var(--primary-color)", boxShadow: 'none',
+                                textTransform: "none"
+                            }}>Continuar a compra</Button>
                         </div>
+                    ))}
 
-                        <Button variant="contained" href="/" sx={{
-                            backgroundColor: "var(--primary-color)", boxShadow: 'none',
-                            textTransform: "none"
-                        }}>Continuar a compra</Button>
-                    </div>
                 </div>
             </div>
 
