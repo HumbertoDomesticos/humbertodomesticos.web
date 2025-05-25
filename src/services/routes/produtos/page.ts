@@ -6,6 +6,7 @@ export interface ProdutoApi {
 }
 
 export interface Produto {
+  quantidade: number;
   id_prod: number;
   nome_prod: string;
   descricao_prod: string;
@@ -13,6 +14,9 @@ export interface Produto {
   desconto_prod: number;
   desconto_preco_produto: string;
   estoque_prod: number;
+  img1: string;
+  img2: string;
+  img3: string;
 }
 
 export async function getProduto(): Promise<AxiosResponse> {
