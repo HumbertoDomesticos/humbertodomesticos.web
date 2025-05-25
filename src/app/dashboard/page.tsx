@@ -6,11 +6,11 @@ import StickyNote2Icon from '@mui/icons-material/StickyNote2';
 import { AppProvider, type Navigation } from '@toolpad/core/AppProvider';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import { PageContainer } from '@toolpad/core/PageContainer';
-import { Crud, DataModel, DataSource } from '@toolpad/core/Crud';
+import { Crud, type DataModel, type DataSource } from '@toolpad/core/Crud';
 import { DemoProvider, useDemoRouter } from '@toolpad/core/internal';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import { getProduto } from '@/services/routes/produtos/page';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 const NAVIGATION: Navigation = [
     {
@@ -38,14 +38,16 @@ const demoTheme = createTheme({
 });
 
 export interface ProdutoDashboard extends DataModel {
+    id: number; // <--- necessário para DataGrid
     id_prod: number;
     nome_prod: string;
     descricao_prod: string;
-    preco_produto?: string;
-    desconto_prod?: number;
+    preco_produto: string;
+    desconto_prod: number;
     desconto_preco_produto?: string;
-    estoque_prod?: number;
+    estoque_prod: number;
 }
+
 
 export default function CrudNoCache(props: { window?: () => Window }) {
     const { window } = props;
@@ -56,19 +58,28 @@ export default function CrudNoCache(props: { window?: () => Window }) {
     const demoWindow = window !== undefined ? window() : undefined;
 
     useEffect(() => {
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-        getProduto().then((resp: any) => {
-            setNotesStore(resp);
-        }).catch((err) => {
-            console.log(err);
-        })
+        getProduto()
+            .then((resp: any[]) => {
+                const dataWithId = resp.map((item) => ({
+                    ...item,
+                    id: item.id_prod, // <- adiciona id esperado pela DataGrid
+                }));
+                setNotesStore(dataWithId);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }, []);
+
 
     const notesDataSource: DataSource<ProdutoDashboard> = {
         fields: [
             { field: 'id_prod', headerName: 'ID' },
             { field: 'nome_prod', headerName: 'Produto', flex: 1 },
+            { field: 'descricao_prod', headerName: 'Descrição', flex: 1 },
             { field: 'preco_produto', headerName: 'Preço', flex: 1 },
+            { field: 'desconto_prod', headerName: 'Desconto', flex: 1 },
+            { field: 'estoque_prod', headerName: 'Estoque', flex: 1 },
         ],
 
         getMany: async ({ paginationModel, filterModel, sortModel }) => {
@@ -81,6 +92,7 @@ export default function CrudNoCache(props: { window?: () => Window }) {
 
             // Apply filters (demo only)
             if (filterModel?.items?.length) {
+                // biome-ignore lint/complexity/noForEach: <explanation>
                 filterModel.items.forEach(({ field, value, operator }) => {
                     if (!field || value == null) {
                         return;
@@ -159,19 +171,20 @@ export default function CrudNoCache(props: { window?: () => Window }) {
         },
 
         createOne: async (data) => {
-            // Simulate loading delay
-            await new Promise((resolve) => {
-                setTimeout(resolve, 750);
-            });
+            await new Promise((resolve) => setTimeout(resolve, 750));
+
+            const newId = notesStore.reduce((max, note) => Math.max(max, note.id_prod), 0) + 1;
 
             const newNote = {
-                id_prod: notesStore.reduce((max, note) => Math.max(max, note.id_prod), 0) + 1,
+                id: newId,
+                id_prod: newId,
                 ...data,
             } as ProdutoDashboard;
 
             setNotesStore([...notesStore, newNote]);
             return newNote;
         },
+
 
         updateOne: async (noteId, data) => {
             // Simulate loading delay
@@ -234,7 +247,8 @@ export default function CrudNoCache(props: { window?: () => Window }) {
         return match ? match[1] : null;
     }
 
-    const title = React.useMemo(() => {
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    const title = useMemo(() => {
         if (router.pathname === '/notes/new') {
             return 'Novo Produto';
         }
