@@ -10,7 +10,7 @@ export function OurProductsComponent({ produtos }: ProdutoApi) {
     <div className={`${styles.section} container_info`}>
       <div className={styles.sectionOurProducts}>
         <h1 className={styles.title}>Nossos produtos</h1>
-        <a href="/nossos-produtos"><p>Ver mais</p></a>
+        <Link href="/nossos-produtos"><p>Ver mais</p></Link>
       </div>
       <div className={styles.productCards}>
         {displayedProducts.map((product) => (

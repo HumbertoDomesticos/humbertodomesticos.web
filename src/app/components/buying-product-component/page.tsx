@@ -1,6 +1,5 @@
 import Image from "next/image";
 import styles from "./styles.module.scss";
-import { useState } from "react";
 import { useProduto } from "@/app/context/ProdutosContext";
 
 interface ProdutoParaComprarProps {
@@ -8,44 +7,31 @@ interface ProdutoParaComprarProps {
 }
 
 export default function ProdutoParaComprar({ isBuying }: ProdutoParaComprarProps) {
-    const [value, setValue] = useState(1);
+    const {
+        carrinho,
+        atualizarQuantidade,
+        removerDoCarrinho,
+    } = useProduto();
 
-    const handleDecrement = () => {
-        setValue((prev) => Math.max(1, prev - 1));
-    };
-
-    const handleIncrement = () => {
-        setValue((prev) => Math.min(99, prev + 1));
-    };
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = Number.parseInt(e.target.value, 10);
-
-        // biome-ignore lint/suspicious/noGlobalIsNan: <explanation>
-        if (isNaN(newValue)) {
-            setValue(1);
-            return;
-        }
-
-        if (newValue < 1) {
-            setValue(1);
-        } else if (newValue > 99) {
-            setValue(99);
-        } else {
-            setValue(newValue);
+    const handleIncrement = (produtoId: number, estoque: number, quantidadeAtual: number) => {
+        if (quantidadeAtual < estoque) {
+            atualizarQuantidade(produtoId, quantidadeAtual + 1);
         }
     };
 
-    const { carrinho, removerDoCarrinho, limparCarrinho, quantidadeItens } = useProduto();
+    const handleDecrement = (produtoId: number, quantidadeAtual: number) => {
+        if (quantidadeAtual > 1) {
+            atualizarQuantidade(produtoId, quantidadeAtual - 1);
+        }
+    };
 
     return (
         <div className={styles.produto}>
             {carrinho.map((produto) => (
                 <div className={styles.pai} key={produto.id_prod}>
-                    <div className={styles.produtoAll} key={produto.id_prod}>
-
+                    <div className={styles.produtoAll}>
                         <div>
-                            <Image src={"/products/lavaeseca.png"} alt={""} width={90} height={80} />
+                            <Image src={"/products/lavaeseca.png"} alt={produto.nome_prod} width={90} height={80} />
                         </div>
 
                         <div className={styles.produtoInfo}>
@@ -53,34 +39,48 @@ export default function ProdutoParaComprar({ isBuying }: ProdutoParaComprarProps
 
                             {isBuying ? (
                                 <div>
-                                    <p>Quantidade: 1</p>
+                                    <p>Quantidade: {produto.quantidade}</p>
                                 </div>
                             ) : (
                                 <div className={styles.quantity_container}>
-                                    <button type="button" onClick={handleDecrement}>-</button>
+                                    <button type="button" onClick={() => handleDecrement(produto.id_prod, produto.quantidade)}>-</button>
+
                                     <input
                                         type="number"
-                                        value={value}
-                                        onChange={handleChange}
+                                        value={produto.quantidade}
+                                        onChange={(e) => {
+                                            const novaQuantidade = Number(e.target.value);
+                                            if (novaQuantidade >= 1 && novaQuantidade <= produto.estoque_prod) {
+                                                atualizarQuantidade(produto.id_prod, novaQuantidade);
+                                            }
+                                        }}
                                         min={1}
-                                        max={99}
+                                        max={produto.estoque_prod}
                                     />
-                                    <button type="button" onClick={handleIncrement}>+</button>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => handleIncrement(produto.id_prod, produto.estoque_prod, produto.quantidade)}
+                                    >
+                                        +
+                                    </button>
                                 </div>
                             )}
-
                         </div>
                     </div>
 
-                    <div className={styles.prices} key={produto.id_prod}>
+                    <div className={styles.prices}>
                         <div>
                             <p>De {produto.preco_produto}</p>
                             <span>Por {produto.desconto_preco_produto}</span>
                         </div>
-                        <span className={styles.excluir}>Excluir</span>
+                        {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+                        <span className={styles.excluir} onClick={() => removerDoCarrinho(produto.id_prod)}>
+                            Excluir
+                        </span>
                     </div>
                 </div>
             ))}
         </div>
-    )
+    );
 }

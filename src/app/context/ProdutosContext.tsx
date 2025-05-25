@@ -9,7 +9,13 @@ interface ProdutoContextType {
   adicionarAoCarrinho: (produto: Produto) => void;
   removerDoCarrinho: (produtoId: number) => void;
   limparCarrinho: () => void;
+  atualizarQuantidade: (produtoId: number, novaQuantidade: number) => void;
   quantidadeItens: number;
+
+}
+
+interface ProdutoCarrinho extends Produto {
+  quantidade: number;
 }
 
 interface ProdutoProviderProps {
@@ -20,25 +26,42 @@ const ProdutoContext = createContext<ProdutoContextType | undefined>(undefined);
 
 export const ProdutoProvider: React.FC<ProdutoProviderProps> = ({ children }) => {
 
-  const [carrinho, setCarrinho] = useState<Produto[]>([]);
+  const [carrinho, setCarrinho] = useState<ProdutoCarrinho[]>([]);
 
   const adicionarAoCarrinho = (produto: Produto) => {
-    setCarrinho((prev) => {
-      const existeNoCarrinho = prev.some(item => item.id_prod === produto.id_prod);
+  setCarrinho((prev) => {
+    const produtoExistente = prev.find(item => item.id_prod === produto.id_prod);
 
-      if (existeNoCarrinho) {
-        // Se já existe, pode aumentar a quantidade ou não fazer nada
-        // Aqui estou apenas retornando o carrinho sem alterações
-        // Você pode implementar lógica para incrementar quantidade se quiser
-        return prev;
+    if (produtoExistente) {
+      // Já está no carrinho, incrementa se não ultrapassar o estoque
+      if (produtoExistente.quantidade < produto.estoque_prod) {
+        return prev.map(item =>
+          item.id_prod === produto.id_prod
+            ? { ...item, quantidade: item.quantidade + 1 }
+            : item
+        );
+      // biome-ignore lint/style/noUselessElse: <explanation>
+      } else {
+        return prev; // Não ultrapassa o estoque
       }
+    }
 
-      // Se não existe, adiciona ao carrinho
-      return [...prev, produto];
-    });
+    // Adiciona novo com quantidade 1
+    return [...prev, { ...produto, quantidade: 1 }];
+  });
+};
 
-    
+
+  const atualizarQuantidade = (produtoId: number, novaQuantidade: number) => {
+    setCarrinho((prev) =>
+      prev.map(item =>
+        item.id_prod === produtoId
+          ? { ...item, quantidade: novaQuantidade }
+          : item
+      )
+    );
   };
+
 
   const removerDoCarrinho = (produtoId: number) => {
     setCarrinho((prev) => prev.filter(item => item.id_prod !== produtoId));
@@ -48,7 +71,7 @@ export const ProdutoProvider: React.FC<ProdutoProviderProps> = ({ children }) =>
     setCarrinho([]);
   };
 
-  const quantidadeItens = carrinho.length;
+  const quantidadeItens = carrinho.reduce((total, item) => total + item.quantidade, 0);
 
   return (
     <ProdutoContext.Provider
@@ -57,7 +80,8 @@ export const ProdutoProvider: React.FC<ProdutoProviderProps> = ({ children }) =>
         adicionarAoCarrinho,
         removerDoCarrinho,
         limparCarrinho,
-        quantidadeItens
+        quantidadeItens,
+        atualizarQuantidade,
       }}
     >
       {children}
