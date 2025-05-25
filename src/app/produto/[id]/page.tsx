@@ -10,13 +10,16 @@ import { useEffect, useState } from "react";
 import { getProduto, type Produto } from "@/services/routes/produtos/page";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { useAuth } from "@/app/context/AuthContext";
+import { useRouter } from "next/navigation";
+import { useProduto } from "@/app/context/ProdutosContext";
 
 
 export default function ProductDetails() {
 
     const params = useParams();
     const productId = Number(params.id); // pegar id da rota
-
+    const { adicionarAoCarrinho, quantidadeItens } = useProduto();
     const [data, setData] = useState<Produto[]>([]);
 
     useEffect(() => {
@@ -34,6 +37,18 @@ export default function ProductDetails() {
         return <p>Carregando produto...</p>;
     }
 
+     const { isAuthenticated } = useAuth();
+    
+        const router = useRouter();
+    
+        const handleAdicionarAoCarrinho = () => {
+            if (!isAuthenticated) {
+                router.push("/login");
+            } else {
+                adicionarAoCarrinho(product);
+                alert(`${product.nome_prod} foi adicionado ao carrinho!`);
+            }
+        };
 
     return (
         <>
@@ -75,20 +90,16 @@ export default function ProductDetails() {
                         <div >
                             <p className={styles.estoque}>Em estoque</p>
                             <p className={styles.estoque}>{product.estoque_prod} unidades restantes</p>
-                            {/* <input type="submit" value="Continuar a compra" className={styles.continuar} /> */}
 
-                                <Button variant="contained" href="/" sx={{
-                                    backgroundColor: "var(--secondary-color)", width: "486.43px", height: "56px", marginTop: "15px", textTransform: "none", color: "black", boxShadow: 'none',
-                                }}>Continuar a compra</Button>
+                            <Button variant="contained" href="/" sx={{
+                                backgroundColor: "var(--secondary-color)", width: "486.43px", height: "56px", marginTop: "15px", textTransform: "none", color: "black", boxShadow: 'none',
+                            }}>Continuar a compra</Button>
 
                             <Button
                                 variant="contained"
                                 sx={{ backgroundColor: "var(--primary-color)", width: "486.43px", height: "56px", marginTop: "15px", textTransform: "none", boxShadow: 'none' }}
-                            // onclick={() => handleSaveProduct(productId)}
-                            >Adicionar ao carrinho</Button>
-
-
-                            {/* <input type="submit" value="Adicionar ao carrinho" className={styles.carrinho} /> */}
+                                onClick={handleAdicionarAoCarrinho}
+                                >Adicionar ao carrinho</Button>
                         </div>
 
 

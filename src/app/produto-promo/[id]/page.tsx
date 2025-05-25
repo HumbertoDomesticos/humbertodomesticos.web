@@ -11,12 +11,13 @@ import { getProduto, type Produto } from "@/services/routes/produtos/page";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useProduto } from "@/app/context/ProdutosContext";
-
+import { useAuth } from "@/app/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 export default function ProductPromoDetails() {
 
     const params = useParams();
-    const productId = Number(params.id); // pegar id da rota
+    const productId = Number(params.id); 
     const { adicionarAoCarrinho, quantidadeItens } = useProduto();
     const [data, setData] = useState<Produto[]>([]);
 
@@ -36,12 +37,18 @@ export default function ProductPromoDetails() {
     }
 
 
-    const handleAdicionarAoCarrinho = () => {
-        adicionarAoCarrinho(product);
-        // Você pode adicionar um feedback visual aqui (toast, alert, etc.)
-        alert(`${product.nome_prod} foi adicionado ao carrinho!`);
-    };
+    const { isAuthenticated } = useAuth();
 
+    const router = useRouter();
+
+    const handleAdicionarAoCarrinho = () => {
+        if (!isAuthenticated) {
+            router.push("/login");
+        } else {
+            adicionarAoCarrinho(product);
+            alert(`${product.nome_prod} foi adicionado ao carrinho!`);
+        }
+    };
 
     return (
         <>

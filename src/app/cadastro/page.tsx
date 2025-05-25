@@ -69,12 +69,10 @@ export default function Login() {
 
  const handleSubmit = async () => {
   const usuarioPayload: Usuario = {
-    id_usuario: 0,
     nome_usuario: formData.nome,
-    cpf_usuario: formData.cpf,
     email_usuario: formData.email,
-    senha_usuario: formData.senha,
-    senha_usuario_temp: formData.senha, // <- necessário para o backend
+    cpf_usuario: formData.cpf,
+    senha_usuario_temp: formData.senha,
     data_nasc_usuario: nascimento?.startOf('day').toISOString().split('T')[0] ?? ''
   };
 
@@ -190,6 +188,7 @@ export default function Login() {
               variant="contained"
               sx={{ backgroundColor: "var(--primary-color)", marginTop: "15px", textTransform: "none" }}
               onClick={handleSubmit}
+              href="/"
             >
               Criar conta
             </Button>

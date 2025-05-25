@@ -11,6 +11,9 @@ import Box from '@mui/material/Box';
 import { useState } from "react";
 import { Button } from "@mui/material";
 import ProdutoParaComprar from "@/app/components/buying-product-component/page";
+import { useAuth } from "@/app/context/AuthContext";
+import { useProduto } from "@/app/context/ProdutosContext";
+import { useRouter } from "next/navigation";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -41,7 +44,6 @@ function a11yProps(index: number) {
     };
 }
 
-
 export default function FinalizarPedido() {
 
     const [value, setValue] = useState(0);
@@ -49,6 +51,17 @@ export default function FinalizarPedido() {
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
+
+    const { carrinho, removerDoCarrinho, limparCarrinho, quantidadeItens } = useProduto();
+
+    const { isAuthenticated } = useAuth();
+
+    const router = useRouter();
+
+    if (!isAuthenticated) {
+        router.push("/login");
+        return null;
+    }
 
     return (
         <div>

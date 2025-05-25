@@ -37,7 +37,7 @@ export default function NossosProdutos() {
 
             <div className={`${styles.route} container_info`}>
                 <span>
-                    <a href="/"><House size={20} /></a>
+                    <Link href="/"><House size={20} /></Link>
                     <p>
                         <CaretRight size={14} />
                         Nossos Produtos

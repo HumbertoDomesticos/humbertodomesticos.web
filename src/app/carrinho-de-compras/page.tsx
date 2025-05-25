@@ -11,6 +11,7 @@ import { type Produto, getProduto } from "@/services/routes/produtos/page";
 import { useState, useEffect } from "react";
 import ProdutoParaComprar from "../components/buying-product-component/page";
 import { useProduto } from "../context/ProdutosContext";
+import { useAuth } from "../context/AuthContext";
 
 export default function CarrinhoCompras() {
 
@@ -27,7 +28,23 @@ export default function CarrinhoCompras() {
 
     const { carrinho, removerDoCarrinho, limparCarrinho, quantidadeItens } = useProduto();
 
-    console.log(carrinho)
+    const { isAuthenticated } = useAuth();
+
+    if (!isAuthenticated) {
+        return <p>Por favor, faça login para acessar seu carrinho.</p>;
+    }
+
+    const calcularSubtotal = () => {
+        return carrinho.reduce((total, produto) => {
+            const preco = Number(produto.desconto_preco_produto?.toString().replace("R$", "").replace(",", ".").trim()) || 0;
+            const quantidade = produto.quantidade || 1;
+            return total + preco * quantidade;
+        }, 0);
+    };
+
+    const subtotal = calcularSubtotal();
+    const frete = 0; // pode ser alterado no futuro
+    const total = subtotal + frete;
 
     return (
         <div>
@@ -43,62 +60,71 @@ export default function CarrinhoCompras() {
                 </span>
             </div>
 
-            {/* Carrinho VAZIO */}
-            {/* <div className={`${styles.container} container_info`}>
-                    <Image src={"/carrinho.png"} alt={""} width={144} height={144} />
-                    <div className={styles.carrinho_vazio}>
-                        <span>Seu carrinho de compras está vazio</span>
-                        <Button variant="contained" href="/" sx={{
-                            backgroundColor: "var(--primary-color)", boxShadow: 'none',
-                            textTransform: "none"
-                        }}>Ir às compras</Button>
-                    </div>
-                </div> */}
-
-            {/* Carrinho com produtos */}
-            <div className={`${styles.contentCarrinho} container_info`}>
-
-                <div className={styles.containerCarrinho}>
-                    <h1>Seus produtos</h1>
-
-                    <ProdutoParaComprar isBuying={false} />
-
-                </div>
-
-                <div className={styles.containerCompra}>
-                    <h1>Resumo da compra</h1>
-
-                    {carrinho.map((produto) => (
-                        <div className={styles.produtoResumo} key={produto.id_prod}>
-                            <div>
-                                <div className={styles.aside}>
-                                    <p>Produto ({carrinho.length})</p>
-                                    <p>{produto.desconto_preco_produto}</p>
-                                </div>
-                                <div className={styles.aside}>
-                                    <p>Frete</p>
-                                    <p>Grátis</p>
-                                </div>
-                            </div>
-
-                            <div className={styles.aside}>
-                                <span>Total</span>
-                                <span>{produto.desconto_preco_produto}</span>
-                            </div>
-
-                            <Button variant="contained" href="/carrinho-de-compras/finalizar-pedido" sx={{
+            {carrinho.length === 0 ? (
+                <>
+                    < div className={`${styles.container} container_info`}>
+                        <Image src={"/carrinho.png"} alt={""} width={144} height={144} />
+                        <div className={styles.carrinho_vazio}>
+                            <span>Seu carrinho de compras está vazio</span>
+                            <Button variant="contained" href="/" sx={{
                                 backgroundColor: "var(--primary-color)", boxShadow: 'none',
                                 textTransform: "none"
-                            }}>Continuar a compra</Button>
+                            }}>Ir às compras</Button>
                         </div>
-                    ))}
+                    </div>
+                </>
+            ) : (
 
-                </div>
-            </div>
+                <>
+                    < div className={`${styles.contentCarrinho} container_info`
+                    }>
+
+                        <div className={styles.containerCarrinho}>
+                            <h1>Seus produtos</h1>
+
+                            <ProdutoParaComprar isBuying={false} />
+
+                        </div>
+
+                        <div className={styles.containerCompra}>
+                            <h1>Resumo da compra</h1>
+
+                            <div className={styles.produtoResumo}>
+                                <div>
+                                    <div className={styles.aside}>
+                                        <p>Produto ({quantidadeItens})</p>
+                                        <p>R$ {subtotal.toFixed(2).replace(".", ",")}</p>
+                                    </div>
+                                    <div className={styles.aside}>
+                                        <p>Frete</p>
+                                        <p>Grátis</p>
+                                    </div>
+                                </div>
+
+                                <div className={styles.aside}>
+                                    <span>Total</span>
+                                    <span>R$ {total.toFixed(2).replace(".", ",")}</span>
+                                </div>
+
+                                <Link href="/carrinho-de-compras/finalizar-pedido">
+                                    <Button variant="contained" sx={{
+                                        backgroundColor: "var(--primary-color)", boxShadow: 'none',
+                                        textTransform: "none"
+                                    }}>
+                                        Continuar a compra
+                                    </Button>
+                                </Link>
+                            </div>
+
+
+                        </div>
+                    </div >
+                </>
+            )}
 
             <OffersDayComponent produtos={produtos} />
 
             <FooterComponent />
-        </div>
+        </div >
     )
 }

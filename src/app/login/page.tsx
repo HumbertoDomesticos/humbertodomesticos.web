@@ -2,13 +2,21 @@
 
 import { Box, Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from "@mui/material";
 import { HeaderComponentLogin } from "../components/header-component-login";
-import styles from "./styles.module.scss"
+import styles from "./styles.module.scss";
 import { Eye, EyeClosed } from "@phosphor-icons/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useAuth } from "../context/AuthContext";
+import { useRouter } from "next/navigation";
+import { type Usuario, getUsuarioPorEmail } from "@/services/routes/usuarios/page";
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
+    const [email, setEmail] = useState('');
+    const [senha, setSenha] = useState('');
+    const [error, setError] = useState('');
+    const { login, isAuthenticated } = useAuth();
+    const router = useRouter();
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -16,80 +24,132 @@ export default function Login() {
         event.preventDefault();
     };
 
-    const handleMouseUpPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError('');
+
+        try {
+            await login(email, senha);
+            router.push('/');
+        } catch (err) {
+            setError('Credenciais inválidas. Por favor, tente novamente.');
+            console.error('Login error:', err);
+        }
     };
+
     return (
-        <div >
+        <div>
             <HeaderComponentLogin />
 
-            <div className={`${styles.content}  container_info`}>
+            <div className={`${styles.content} container_info`}>
                 <h1>Faça login ou crie uma conta</h1>
 
                 <div className={styles.center}>
-
                     <div className={styles.forms}>
-
                         <h2>Quero criar uma conta</h2>
                         <Box
                             component="form"
-                            // sx={{ '& .MuiTextField-root': { width: "486.43px" } }}
                             noValidate
                             autoComplete="off"
                             className={styles.input}
                         >
-                            <TextField id="outlined-basic" label="E-mail" variant="outlined" />
-
+                            <TextField
+                                id="email-cadastro"
+                                label="E-mail"
+                                variant="outlined"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                fullWidth
+                            />
                         </Box>
 
-                        <Link href="/cadastro"><Button variant="contained" href="/" sx={{ backgroundColor: "var(--primary-color)",  marginTop: "15px", textTransform: "none" }}>Continuar</Button></Link>
+                        <Link href="/cadastro" passHref legacyBehavior>
+                            <Button
+                                variant="contained"
+                                sx={{
+                                    backgroundColor: "var(--primary-color)",
+                                    marginTop: "15px",
+                                    textTransform: "none",
+                                    width: '100%'
+                                }}
+                            >
+                                Continuar
+                            </Button>
+                        </Link>
                     </div>
 
                     <div className={styles.forms}>
                         <h2>Já sou cliente</h2>
 
+                        {error && (
+                            <div style={{ color: 'red', marginBottom: '16px' }}>
+                                {error}
+                            </div>
+                        )}
+
                         <Box
                             component="form"
-                            sx={{ '& .MuiTextField-root': { mb: 2 } }}
+                            sx={{
+                                '& .MuiTextField-root': { mb: 2 },
+                                width: '100%'
+                            }}
                             noValidate
                             autoComplete="off"
-                            className={styles.input}
+                            onSubmit={handleSubmit}
                         >
-                            <TextField id="outlined-basic" label="E-mail, CPF ou CNPJ" variant="outlined" />
+                            <TextField
+                                id="login-email"
+                                label="E-mail"
+                                variant="outlined"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                fullWidth
+                            />
 
-                             <FormControl sx={{ width: '25ch' }} variant="outlined">
+                            <FormControl variant="outlined" fullWidth>
                                 <InputLabel htmlFor="outlined-adornment-password">Senha</InputLabel>
                                 <OutlinedInput
                                     id="outlined-adornment-password"
-                                    type={showPassword ? 'text' : 'senha'}
+                                    type={showPassword ? 'text' : 'password'}
+                                    value={senha}
+                                    onChange={(e) => setSenha(e.target.value)}
+                                    required
                                     endAdornment={
                                         <InputAdornment position="end">
                                             <IconButton
                                                 aria-label={
-                                                    showPassword ? 'hide the password' : 'display the password'
+                                                    showPassword ? 'Esconder senha' : 'Mostrar senha'
                                                 }
                                                 onClick={handleClickShowPassword}
                                                 onMouseDown={handleMouseDownPassword}
-                                                onMouseUp={handleMouseUpPassword}
                                                 edge="end"
                                             >
-                                            {showPassword ? <Eye size={18} /> : <EyeClosed size={18} />}
+                                                {showPassword ? <Eye size={18} /> : <EyeClosed size={18} />}
                                             </IconButton>
                                         </InputAdornment>
                                     }
-                                    label="Password"
+                                    label="Senha"
                                 />
                             </FormControl>
 
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                fullWidth
+                                sx={{
+                                    backgroundColor: "var(--primary-color)",
+                                    marginTop: "15px",
+                                    textTransform: "none",
+                                    padding: '12px'
+                                }}
+                            >
+                                Continuar
+                            </Button>
                         </Box>
-
-                        <Link href="/"><Button variant="contained" href="/" sx={{ backgroundColor: "var(--primary-color)", marginTop: "15px", textTransform: "none" }}>Continuar</Button></Link>
-
                     </div>
                 </div>
             </div>
-
-
         </div>
     )
 }
