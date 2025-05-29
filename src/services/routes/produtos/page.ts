@@ -5,18 +5,22 @@ export interface ProdutoApi {
   produtos: Produto[];
 }
 
+export interface IImage{
+  path_image: string;
+  id_prod_images: number;
+  id_image: number;
+}
+
 export interface Produto {
-  quantidade: number;
-  id_prod: number;
   nome_prod: string;
   descricao_prod: string;
-  preco_produto: string;
   desconto_prod: number;
-  desconto_preco_produto: string;
   estoque_prod: number;
-  img1: string;
-  img2: string;
-  img3: string;
+  id_prod: number;
+  quantidade: number;
+  preco_produto: string;
+  desconto_preco_produto: string;
+  images_prod: IImage[];
 }
 
 export async function getProduto(): Promise<AxiosResponse> {

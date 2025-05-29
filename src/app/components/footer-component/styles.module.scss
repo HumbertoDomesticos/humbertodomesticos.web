@@ -1,14 +1,78 @@
-.content{
-    min-height: 200px;
-    background-color: var(--secondary-color);
-    margin-top: 35px;
+.content {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  background-color: var(--secondary-color);
+  padding: 40px 60px;
+  color: black;
+
+  .footerColumn {
+    flex: 1 1 200px;
+    margin-bottom: 20px;
+
+    h4 {
+      font-size: 18px;
+      margin-bottom: 16px;
+      position: relative;
+
+      &::after {
+        content: "";
+        display: block;
+        width: 40px;
+        height: 2px;
+        background-color: var(--primary-color);
+        margin-top: 4px;
+      }
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        margin-bottom: 10px;
+        color: #000000;
+        cursor: pointer;
+
+        &:hover {
+          color: #000000;
+        }
+      }
+    }
+  }
+
+  .socialIcons {
+    display: flex;
+    gap: 12px;
+
+    a {
+      background: #000000;
+      color: #fff;
+      border-radius: 50%;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s ease;
+
+      &:hover {
+        background: var(--primary-color);
+      }
+    }
+  }
 }
 
-.copy{
-    background-color: var(--primary-color);
-    color: white;
-    padding: 10px;
-    min-height: 30px;
-    font-size: 12px;
-    text-align: center;
+// .content{
+//     min-height: 200px;
+//     background-color: var(--secondary-color);
+//     margin-top: 35px;
+// }
+
+.copy {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 10px;
+  min-height: 30px;
+  font-size: 12px;
+  text-align: center;
 }
