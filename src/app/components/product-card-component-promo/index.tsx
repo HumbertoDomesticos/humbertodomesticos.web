@@ -3,13 +3,14 @@
 import { Link, Star } from "@phosphor-icons/react";
 import styles from "./styles.module.scss";
 import Image from "next/image";
+import { IImage, Produto } from "@/services/routes/produtos/page";
 
 interface ProductCardProps{
     name: string;
     price?: string;
     oldPrice?: string;
     promo?: number;
-    image: string;
+    image: IImage[];
 }
 
 export function ProductCardPromo({name, price, oldPrice, promo, image} : ProductCardProps) {
@@ -20,7 +21,8 @@ export function ProductCardPromo({name, price, oldPrice, promo, image} : Product
             <div className={styles.card}>
                 <div className={styles.cardImage}>
                     {/* Imagem do produto */}
-                    <Image src={image} alt={""} width={180} height={165} />
+                    <Image src={image[0].path_image} alt={""} width={180} height={165} />
+                    {/* {JSON.stringify(image.map((i) => i.path_image[0]))} */}
                 </div>
                 <div className={styles.cardDescription}>
                     {/* Descrição */}

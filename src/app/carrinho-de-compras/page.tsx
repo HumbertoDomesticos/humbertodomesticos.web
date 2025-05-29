@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Button, Link, styled } from "@mui/material";
 import { FooterComponent } from "../components/footer-component";
@@ -11,120 +11,128 @@ import { type Produto, getProduto } from "@/services/routes/produtos/page";
 import { useState, useEffect } from "react";
 import ProdutoParaComprar from "../components/buying-product-component/page";
 import { useProduto } from "../context/ProdutosContext";
-// import { useAuth } from "../context/AuthContext";
 
 export default function CarrinhoCompras() {
+  const { carrinho, removerDoCarrinho, limparCarrinho, quantidadeItens } =
+    useProduto();
+  const [produtos, setProdutos] = useState<Produto[]>([]);
 
-    const [produtos, setProdutos] = useState<Produto[]>([]);
+  useEffect(() => {
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    getProduto()
+      .then((resp: any) => {
+        setProdutos(resp);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
-    useEffect(() => {
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-        getProduto().then((resp: any) => {
-            setProdutos(resp);
-        }).catch((err) => {
-            console.log(err);
-        })
-    }, []);
+  const calcularSubtotal = () => {
+    return carrinho.reduce((total, produto) => {
+      const preco =
+        Number(
+          produto.desconto_preco_produto
+            ?.toString()
+            .replace("R$", "")
+            .replace(",", ".")
+            .trim()
+        ) || 0;
+      const quantidade = produto.quantidade || 1;
+      return total + preco * quantidade;
+    }, 0);
+  };
 
-    const { carrinho, removerDoCarrinho, limparCarrinho, quantidadeItens } = useProduto();
+  const subtotal = calcularSubtotal();
+  const frete = 0; // pode ser alterado no futuro
+  const total = subtotal + frete;
 
-    // const { isAuthenticated } = useAuth();
+  return (
+    <div>
+      <HeaderComponent />
 
-    // if (!isAuthenticated) {
-    //     return <p>Por favor, faça login para acessar seu carrinho.</p>;
-    // }
+      <div className={`${styles.route} container_info`}>
+        <span>
+          <a href="/">
+            <House size={20} />
+          </a>
+          <p>
+            <CaretRight size={14} />
+            Meu carrinho
+          </p>
+        </span>
+      </div>
 
-    const calcularSubtotal = () => {
-        return carrinho.reduce((total, produto) => {
-            const preco = Number(produto.desconto_preco_produto?.toString().replace("R$", "").replace(",", ".").trim()) || 0;
-            const quantidade = produto.quantidade || 1;
-            return total + preco * quantidade;
-        }, 0);
-    };
+      {carrinho.length === 0 ? (
+        <>
+          <div className={`${styles.container} container_info`}>
+            <Image src={"/carrinho.png"} alt={""} width={144} height={144} />
+            <div className={styles.carrinho_vazio}>
+              <span>Seu carrinho de compras está vazio</span>
+              <Button
+                variant="contained"
+                href="/"
+                sx={{
+                  backgroundColor: "var(--primary-color)",
+                  boxShadow: "none",
+                  textTransform: "none",
+                }}
+              >
+                Ir às compras
+              </Button>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className={`${styles.contentCarrinho} container_info`}>
+            <div className={styles.containerCarrinho}>
+              <h1>Seus produtos</h1>
 
-    const subtotal = calcularSubtotal();
-    const frete = 0; // pode ser alterado no futuro
-    const total = subtotal + frete;
-
-    return (
-        <div>
-            <HeaderComponent />
-
-            <div className={`${styles.route} container_info`}>
-                <span>
-                    <a href="/"><House size={20} /></a>
-                    <p>
-                        <CaretRight size={14} />
-                        Meu carrinho
-                    </p>
-                </span>
+              <ProdutoParaComprar isBuying={false} />
             </div>
 
-            {carrinho.length === 0 ? (
-                <>
-                    < div className={`${styles.container} container_info`}>
-                        <Image src={"/carrinho.png"} alt={""} width={144} height={144} />
-                        <div className={styles.carrinho_vazio}>
-                            <span>Seu carrinho de compras está vazio</span>
-                            <Button variant="contained" href="/" sx={{
-                                backgroundColor: "var(--primary-color)", boxShadow: 'none',
-                                textTransform: "none"
-                            }}>Ir às compras</Button>
-                        </div>
-                    </div>
-                </>
-            ) : (
+            <div className={styles.containerCompra}>
+              <h1>Resumo da compra</h1>
 
-                <>
-                    < div className={`${styles.contentCarrinho} container_info`
-                    }>
+              <div className={styles.produtoResumo}>
+                <div>
+                  <div className={styles.aside}>
+                    <p>Produto ({quantidadeItens})</p>
+                    <p>R$ {subtotal.toFixed(2).replace(".", ",")}</p>
+                  </div>
+                  <div className={styles.aside}>
+                    <p>Frete</p>
+                    <p>Grátis</p>
+                  </div>
+                </div>
 
-                        <div className={styles.containerCarrinho}>
-                            <h1>Seus produtos</h1>
+                <div className={styles.aside}>
+                  <span>Total</span>
+                  <span>R$ {total.toFixed(2).replace(".", ",")}</span>
+                </div>
 
-                            <ProdutoParaComprar isBuying={false} />
+                <Link href="/carrinho-de-compras/finalizar-pedido">
+                  <Button
+                    variant="contained"
+                    sx={{
+                      backgroundColor: "var(--primary-color)",
+                      boxShadow: "none",
+                      textTransform: "none",
+                    }}
+                  >
+                    Continuar a compra
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
 
-                        </div>
+      <OffersDayComponent produtos={produtos} />
 
-                        <div className={styles.containerCompra}>
-                            <h1>Resumo da compra</h1>
-
-                            <div className={styles.produtoResumo}>
-                                <div>
-                                    <div className={styles.aside}>
-                                        <p>Produto ({quantidadeItens})</p>
-                                        <p>R$ {subtotal.toFixed(2).replace(".", ",")}</p>
-                                    </div>
-                                    <div className={styles.aside}>
-                                        <p>Frete</p>
-                                        <p>Grátis</p>
-                                    </div>
-                                </div>
-
-                                <div className={styles.aside}>
-                                    <span>Total</span>
-                                    <span>R$ {total.toFixed(2).replace(".", ",")}</span>
-                                </div>
-
-                                <Link href="/carrinho-de-compras/finalizar-pedido">
-                                    <Button variant="contained" sx={{
-                                        backgroundColor: "var(--primary-color)", boxShadow: 'none',
-                                        textTransform: "none"
-                                    }}>
-                                        Continuar a compra
-                                    </Button>
-                                </Link>
-                            </div>
-
-
-                        </div>
-                    </div >
-                </>
-            )}
-
-            <OffersDayComponent produtos={produtos} />
-
-            <FooterComponent />
-        </div >
-    )
+      <FooterComponent />
+    </div>
+  );
 }

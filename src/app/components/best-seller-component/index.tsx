@@ -35,7 +35,7 @@ export function BestSelledComponent({ produtos }: ProdutoApi) {
         <div className={`${styles.productCards} ${styles[transitionDirection]}`}>
           {visibleProducts.map((product) => (
             <Link key={product.id_prod} href={`/produto/${product.id_prod}`} passHref>
-              <ProductCard key={product.id_prod} name={product.nome_prod} price={product.preco_produto} image={product.images_prod[0].path_image} />
+              <ProductCard key={product.id_prod} name={product.nome_prod} price={product.preco_produto} image={product.images_prod} />
             </Link>
           ))}
         </div>

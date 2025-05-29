@@ -33,9 +33,9 @@ export default function ProductDetails() {
 
   const product = data.find((p) => p.id_prod === productId);
 
-  // if (!product) {
-  //     return <p>Carregando produto...</p>;
-  // }
+  if (!product) {
+      return <p>Carregando produto...</p>;
+  }
 
   //  const { isAuthenticated } = useAuth();
 
@@ -71,18 +71,6 @@ export default function ProductDetails() {
           <div className={styles.container_imagens}>
             {product.images_prod.map((img) => (
               <>
-                <Image
-                  src={img.path_image}
-                  alt={"produto"}
-                  width={107}
-                  height={93}
-                />
-                <Image
-                  src={img.path_image}
-                  alt={"produto"}
-                  width={107}
-                  height={93}
-                />
                 <Image
                   src={img.path_image}
                   alt={"produto"}

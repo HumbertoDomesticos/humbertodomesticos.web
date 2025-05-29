@@ -31,7 +31,7 @@ export default function ProdutoParaComprar({ isBuying }: ProdutoParaComprarProps
                 <div className={styles.pai} key={produto.id_prod}>
                     <div className={styles.produtoAll}>
                         <div>
-                            <Image src={product.images_prod[0].path_image} alt={produto.nome_prod} width={90} height={80} />
+                            <Image src={produto.images_prod[0].path_image} alt={produto.nome_prod} width={90} height={80} />
                         </div>
 
                         <div className={styles.produtoInfo}>

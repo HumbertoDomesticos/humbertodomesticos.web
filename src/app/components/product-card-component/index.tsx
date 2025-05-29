@@ -3,11 +3,12 @@
 import { Link, Star } from "@phosphor-icons/react";
 import styles from "./styles.module.scss";
 import Image from "next/image";
+import { IImage } from "@/services/routes/produtos/page";
 
 interface ProductCardProps {
     name: string;
     price: string;
-    image: string;
+    image: IImage[];
 }
 
 export function ProductCard({ name, price, image }: ProductCardProps) {
@@ -16,7 +17,7 @@ export function ProductCard({ name, price, image }: ProductCardProps) {
         <div className={styles.content}>
             <div className={styles.card}>
                 <div className={styles.cardImage}>
-                    <Image src={image} alt={""} width={180} height={165} />
+                    <Image src={image[0].path_image} alt={""} width={180} height={165} />
                 </div>
                 <div className={styles.cardDescription}>
                     <div className={styles.cardStars}>
