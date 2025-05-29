@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { getProduto, type Produto } from "@/services/routes/produtos/page";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { useAuth } from "@/app/context/AuthContext";
+// import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useProduto } from "@/app/context/ProdutosContext";
 
@@ -37,17 +37,17 @@ export default function ProductDetails() {
         return <p>Carregando produto...</p>;
     }
 
-     const { isAuthenticated } = useAuth();
+    //  const { isAuthenticated } = useAuth();
     
         const router = useRouter();
     
         const handleAdicionarAoCarrinho = () => {
-            if (!isAuthenticated) {
-                router.push("/login");
-            } else {
+            // if (!isAuthenticated) {
+            //     router.push("/login");
+            // } else {
                 adicionarAoCarrinho(product);
                 alert(`${product.nome_prod} foi adicionado ao carrinho!`);
-            }
+            // }
         };
 
     return (

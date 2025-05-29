@@ -14,7 +14,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import { useAuth } from "../context/AuthContext";
+// import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
 
 
@@ -24,32 +24,32 @@ export default function Perfil() {
 
     const [usuarioLogado, setUsuarioLogado] = useState<Usuario>();
 
-    const { user } = useAuth()
+    // const { user } = useAuth()
 
     const router = useRouter();
 
-    useEffect(() => {
-        const storedEmail = localStorage.getItem('userEmail');
-        if (!storedEmail) {
-            router.replace('/login');
-            return;
-        }
+    // useEffect(() => {
+    //     const storedEmail = localStorage.getItem('userEmail');
+    //     if (!storedEmail) {
+    //         router.replace('/login');
+    //         return;
+    //     }
 
-    }, [router]);
+    // }, [router]);
 
-    useEffect(() => {
-        getUsuario()
-            .then((resp: Usuario[]) => {
-                setUsuario(resp);
-                const usuarioFiltrado = resp.find((u) => u.email_usuario === user?.email_usuario);
-                if (usuarioFiltrado) {
-                    setUsuarioLogado(usuarioFiltrado);
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    }, [user]);
+    // useEffect(() => {
+    //     getUsuario()
+    //         .then((resp: Usuario[]) => {
+    //             setUsuario(resp);
+    //             const usuarioFiltrado = resp.find((u) => u.email_usuario === user?.email_usuario);
+    //             if (usuarioFiltrado) {
+    //                 setUsuarioLogado(usuarioFiltrado);
+    //             }
+    //         })
+    //         .catch((err) => {
+    //             console.log(err);
+    //         });
+    // }, [user]);
 
 
     return (
@@ -65,8 +65,8 @@ export default function Perfil() {
                     <div className={styles.user_info}>
                         <User size={32} />
                         <div className={styles.user}>
-                            <p>{usuarioLogado?.nome_usuario}</p>
-                            {/* <p>Mausoleu</p> */}
+                            {/* <p>{usuarioLogado?.nome_usuario}</p> */}
+                            <p>Aléxia Cazale</p>
 
                             <div className={styles.user_editar}>
                                 <PencilSimpleLine size={18} />
@@ -104,14 +104,14 @@ export default function Perfil() {
 
                             <div className={styles.user}>
                                 <div className={styles.flex}>
-                                    <p>{usuarioLogado?.nome_usuario}</p>
-                                    {/* <p>Mausoleu</p> */}
+                                    {/* <p>{usuarioLogado?.nome_usuario}</p> */}
+                                    <p>Aléxia Cazale</p>
                                     <PencilSimpleLine size={16} />
                                 </div>
 
                                 <div className={styles.flex}>
-                                    <p>{usuarioLogado?.email_usuario}</p>
-                                    {/* <p>mausoleu@gmail</p> */}
+                                    {/* <p>{usuarioLogado?.email_usuario}</p> */}
+                                    <p>alexiacazale7@gmail.com</p>
                                     <PencilSimpleLine size={16} />
                                 </div>
 
@@ -134,7 +134,8 @@ export default function Perfil() {
 
                                 </div>
                                 <div className={styles.flex}>
-                                    <p>{usuarioLogado?.cpf_usuario}</p>
+                                    <p>06*.***.**-*0</p>
+                                    {/* <p>{usuarioLogado?.cpf_usuario}</p> */}
                                     <PencilSimpleLine size={16} />
                                 </div>
 

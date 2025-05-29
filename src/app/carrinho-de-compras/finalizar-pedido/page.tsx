@@ -11,7 +11,7 @@ import Box from '@mui/material/Box';
 import { useState } from "react";
 import { Button } from "@mui/material";
 import ProdutoParaComprar from "@/app/components/buying-product-component/page";
-import { useAuth } from "@/app/context/AuthContext";
+// import { useAuth } from "@/app/context/AuthContext";
 import { useProduto } from "@/app/context/ProdutosContext";
 import { useRouter } from "next/navigation";
 
@@ -54,14 +54,14 @@ export default function FinalizarPedido() {
 
     const { carrinho, removerDoCarrinho, limparCarrinho, quantidadeItens } = useProduto();
 
-    const { isAuthenticated } = useAuth();
+    // const { isAuthenticated } = useAuth();
 
     const router = useRouter();
 
-    if (!isAuthenticated) {
-        router.push("/login");
-        return null;
-    }
+    // if (!isAuthenticated) {
+    //     router.push("/login");
+    //     return null;
+    // }
 
     return (
         <div>

@@ -6,7 +6,7 @@ import styles from "./styles.module.scss";
 import { Eye, EyeClosed } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useAuth } from "../context/AuthContext";
+// import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
 import { type Usuario, getUsuarioPorEmail } from "@/services/routes/usuarios/page";
 
@@ -15,7 +15,7 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [error, setError] = useState('');
-    const { login, isAuthenticated } = useAuth();
+    // const { login, isAuthenticated } = useAuth();
     const router = useRouter();
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -28,13 +28,13 @@ export default function Login() {
         e.preventDefault();
         setError('');
 
-        try {
-            await login(email, senha);
-            router.push('/');
-        } catch (err) {
-            setError('Credenciais inválidas. Por favor, tente novamente.');
-            console.error('Login error:', err);
-        }
+        // try {
+        //     await login(email, senha);
+        //     router.push('/');
+        // } catch (err) {
+        //     setError('Credenciais inválidas. Por favor, tente novamente.');
+        //     console.error('Login error:', err);
+        // }
     };
 
     return (
@@ -58,7 +58,7 @@ export default function Login() {
                                 label="E-mail"
                                 variant="outlined"
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                // onChange={(e) => setEmail(e.target.value)}
                                 fullWidth
                             />
                         </Box>
@@ -95,14 +95,14 @@ export default function Login() {
                             }}
                             noValidate
                             autoComplete="off"
-                            onSubmit={handleSubmit}
+                            // onSubmit={handleSubmit}
                         >
                             <TextField
                                 id="login-email"
                                 label="E-mail"
                                 variant="outlined"
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                // onChange={(e) => setEmail(e.target.value)}
                                 required
                                 fullWidth
                             />
@@ -113,7 +113,7 @@ export default function Login() {
                                     id="outlined-adornment-password"
                                     type={showPassword ? 'text' : 'password'}
                                     value={senha}
-                                    onChange={(e) => setSenha(e.target.value)}
+                                    // onChange={(e) => setSenha(e.target.value)}
                                     required
                                     endAdornment={
                                         <InputAdornment position="end">

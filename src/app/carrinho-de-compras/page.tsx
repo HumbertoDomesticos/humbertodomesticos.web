@@ -11,7 +11,7 @@ import { type Produto, getProduto } from "@/services/routes/produtos/page";
 import { useState, useEffect } from "react";
 import ProdutoParaComprar from "../components/buying-product-component/page";
 import { useProduto } from "../context/ProdutosContext";
-import { useAuth } from "../context/AuthContext";
+// import { useAuth } from "../context/AuthContext";
 
 export default function CarrinhoCompras() {
 
@@ -28,11 +28,11 @@ export default function CarrinhoCompras() {
 
     const { carrinho, removerDoCarrinho, limparCarrinho, quantidadeItens } = useProduto();
 
-    const { isAuthenticated } = useAuth();
+    // const { isAuthenticated } = useAuth();
 
-    if (!isAuthenticated) {
-        return <p>Por favor, faça login para acessar seu carrinho.</p>;
-    }
+    // if (!isAuthenticated) {
+    //     return <p>Por favor, faça login para acessar seu carrinho.</p>;
+    // }
 
     const calcularSubtotal = () => {
         return carrinho.reduce((total, produto) => {
