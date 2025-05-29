@@ -3,7 +3,7 @@ import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from "react-icons/f
 
 export function FooterComponent() {
   return (
-    <div>
+    <div className={styles.all}>
       <div className={styles.content}>
         <div className={styles.footerColumn}>
           <h4>Empresa</h4>
@@ -29,10 +29,10 @@ export function FooterComponent() {
         <div className={styles.footerColumn}>
           <h4>Loja online</h4>
           <ul>
-            <li>Relógio</li>
-            <li>Bolsa</li>
-            <li>Calçados</li>
-            <li>Vestido</li>
+            <li>Geladeiras</li>
+            <li>Cafeteiras</li>
+            <li>Máquinas de lavar</li>
+            <li>Liquidificadores e muito mais</li>
           </ul>
         </div>
 

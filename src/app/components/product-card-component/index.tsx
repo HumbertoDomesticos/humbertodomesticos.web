@@ -7,15 +7,16 @@ import Image from "next/image";
 interface ProductCardProps {
     name: string;
     price: string;
+    image: string;
 }
 
-export function ProductCard({ name, price }: ProductCardProps) {
+export function ProductCard({ name, price, image }: ProductCardProps) {
 
     return (
         <div className={styles.content}>
             <div className={styles.card}>
                 <div className={styles.cardImage}>
-                    <Image src={product.images_prod[0].path_image} alt={""} width={180} height={165} />
+                    <Image src={image} alt={""} width={180} height={165} />
                 </div>
                 <div className={styles.cardDescription}>
                     <div className={styles.cardStars}>

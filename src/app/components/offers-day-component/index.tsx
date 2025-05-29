@@ -39,6 +39,7 @@ export function OffersDayComponent({ produtos }: ProdutoApi) {
                                 price={product.desconto_preco_produto}
                                 oldPrice={product.preco_produto}
                                 promo={product.desconto_prod}
+                                image={product.images_prod[0].path_image}
                             />
                         </Link>
                     ))}

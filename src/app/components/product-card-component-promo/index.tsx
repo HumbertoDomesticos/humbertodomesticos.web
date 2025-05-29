@@ -9,9 +9,10 @@ interface ProductCardProps{
     price?: string;
     oldPrice?: string;
     promo?: number;
+    image: string;
 }
 
-export function ProductCardPromo({name, price, oldPrice, promo} : ProductCardProps) {
+export function ProductCardPromo({name, price, oldPrice, promo, image} : ProductCardProps) {
     
     return (
         <div className={styles.content}>
@@ -19,7 +20,7 @@ export function ProductCardPromo({name, price, oldPrice, promo} : ProductCardPro
             <div className={styles.card}>
                 <div className={styles.cardImage}>
                     {/* Imagem do produto */}
-                    <Image src={product.images_prod[0].path_image} alt={""} width={180} height={165} />
+                    <Image src={image} alt={""} width={180} height={165} />
                 </div>
                 <div className={styles.cardDescription}>
                     {/* Descrição */}
