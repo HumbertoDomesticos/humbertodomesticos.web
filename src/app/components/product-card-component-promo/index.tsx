@@ -41,10 +41,10 @@ export function ProductCardPromo({name, price, oldPrice, promo, image} : Product
                         {/* Nome */}
                         <h1>{name}</h1>
                     </div>
-                    <div>
+                    {/* <div> */}
                         {/* Parcelas */}
-                        <p>em 8x de até R$400,00 sem juros no cartão de crédito</p>
-                    </div>
+                        {/* <p>em 8x de até R$400,00 sem juros no cartão de crédito</p> */}
+                    {/* </div> */}
                     <div className={styles.cardPrice}>
                         {/* Preço */}
                         <div className={styles.cardNewPrice}>

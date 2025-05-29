@@ -33,9 +33,9 @@ export function ProductCard({ name, price, image }: ProductCardProps) {
                     <div>
                         <h1>{name}</h1>
                     </div>
-                    <div>
+                    {/* <div>
                         <p>em 8x de até R$400,00 sem juros no cartão de crédito</p>
-                    </div>
+                    </div> */}
                     <div className={styles.cardPrice}>
                         <div className={styles.cardNewPrice}>
                             <h2>{price}</h2>
