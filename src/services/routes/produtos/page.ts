@@ -32,3 +32,23 @@ export async function getProduto(): Promise<AxiosResponse> {
     throw error;
   }
 }   
+
+export async function updateProduto(idProduto: number, body: Partial<Produto>): Promise<Produto> {
+  try {
+    const response = await axios.put(`http://127.0.0.1:8000/produtos/${idProduto}`, body);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+ 
+export async function deleteProduto(idProduto: number): Promise<AxiosResponse> {
+  try {
+    const response = await axios.delete(`http://127.0.0.1:8000/produtos/${idProduto}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}   
