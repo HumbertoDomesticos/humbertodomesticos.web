@@ -1,6 +1,7 @@
 import Image from "next/image";
 import styles from "./styles.module.scss";
 import { useProduto } from "@/app/context/ProdutosContext";
+import { useState } from "react";
 
 interface ProdutoParaComprarProps {
     isBuying: boolean;
@@ -13,6 +14,13 @@ export default function ProdutoParaComprar({ isBuying }: ProdutoParaComprarProps
         removerDoCarrinho,
     } = useProduto();
 
+    const [quantidades, setQuantidades] = useState<{ [id: number]: number }>({});
+
+    const handleInputChange = (id: number, valor: number) => {
+        setQuantidades((prev) => ({ ...prev, [id]: valor }));
+    };
+
+
     const handleIncrement = (produtoId: number, estoque: number, quantidadeAtual: number) => {
         if (quantidadeAtual < estoque) {
             atualizarQuantidade(produtoId, quantidadeAtual + 1);
@@ -23,6 +31,10 @@ export default function ProdutoParaComprar({ isBuying }: ProdutoParaComprarProps
         if (quantidadeAtual > 1) {
             atualizarQuantidade(produtoId, quantidadeAtual - 1);
         }
+
+        // if (quantidadeAtual === 0) {
+        //     removerDoCarrinho(produtoId)
+        // }
     };
 
     return (
@@ -47,16 +59,29 @@ export default function ProdutoParaComprar({ isBuying }: ProdutoParaComprarProps
 
                                     <input
                                         type="number"
-                                        value={produto.quantidade}
+                                        value={quantidades[produto.id_prod] ?? produto.quantidade}
                                         onChange={(e) => {
                                             const novaQuantidade = Number(e.target.value);
-                                            if (novaQuantidade >= 1 && novaQuantidade <= produto.estoque_prod) {
-                                                atualizarQuantidade(produto.id_prod, novaQuantidade);
-                                            }
+                                            handleInputChange(produto.id_prod, novaQuantidade);
                                         }}
-                                        min={1}
+                                        onBlur={() => {
+                                            const quantidadeFinal = quantidades[produto.id_prod];
+
+                                            if (quantidadeFinal <= 0 ) {
+                                                removerDoCarrinho(produto.id_prod);
+                                            } else if (quantidadeFinal <= produto.estoque_prod) {
+                                                atualizarQuantidade(produto.id_prod, quantidadeFinal);
+                                            }
+
+                                            setQuantidades((prev) => {
+                                                const novo = { ...prev };
+                                                delete novo[produto.id_prod];
+                                                return novo;
+                                            });
+                                        }}
                                         max={produto.estoque_prod}
                                     />
+
 
                                     <button
                                         type="button"

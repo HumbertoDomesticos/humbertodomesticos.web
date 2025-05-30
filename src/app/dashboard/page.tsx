@@ -9,7 +9,7 @@ import { PageContainer } from '@toolpad/core/PageContainer';
 import { Crud, type DataModel, type DataSource } from '@toolpad/core/Crud';
 import { DemoProvider, useDemoRouter } from '@toolpad/core/internal';
 import InventoryIcon from '@mui/icons-material/Inventory';
-import { getProduto } from '@/services/routes/produtos/page';
+import { deleteProduto, getProduto, updateProduto } from '@/services/routes/produtos/page';
 import { useEffect, useMemo } from 'react';
 
 const NAVIGATION: Navigation = [
@@ -179,6 +179,7 @@ export default function CrudNoCache(props: { window?: () => Window }) {
                 id: newId,
                 id_prod: newId,
                 ...data,
+
             } as ProdutoDashboard;
 
             setNotesStore([...notesStore, newNote]);
@@ -187,36 +188,27 @@ export default function CrudNoCache(props: { window?: () => Window }) {
 
 
         updateOne: async (noteId, data) => {
-            // Simulate loading delay
-            await new Promise((resolve) => {
-                setTimeout(resolve, 750);
-            });
+            await new Promise((resolve) => setTimeout(resolve, 750));
 
-            let updatedNote: ProdutoDashboard | null = null;
-            const updatedNotes = notesStore.map((note) => {
-                if (note.id_prod === Number(noteId)) {
-                    updatedNote = { ...note, ...data };
-                    return updatedNote;
-                }
-                return note;
-            });
+            const updatedNote = { ...notesStore.find((note) => note.id_prod === Number(noteId)), ...data } as ProdutoDashboard;
 
-            if (!updatedNote) {
-                throw new Error('Note not found');
-            }
+            await updateProduto(Number(noteId), updatedNote);
+
+            const updatedNotes = notesStore.map((note) =>
+                note.id_prod === Number(noteId) ? updatedNote : note,
+            );
 
             setNotesStore(updatedNotes);
+
             return updatedNote;
         },
 
         deleteOne: async (noteId) => {
-            // Simulate loading delay
-            await new Promise((resolve) => {
-                setTimeout(resolve, 750);
-            });
-
+            await new Promise((resolve) => setTimeout(resolve, 750));
+            await deleteProduto(Number(noteId)); // <-- chamada à API
             setNotesStore(notesStore.filter((note) => note.id_prod !== Number(noteId)));
         },
+
 
         validate: (formValues) => {
             let issues: { message: string; path: [keyof ProdutoDashboard] }[] = [];

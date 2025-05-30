@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { getProduto, type Produto } from "@/services/routes/produtos/page";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-// import { useAuth } from "@/app/context/AuthContext";
+import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useProduto } from "@/app/context/ProdutosContext";
 
@@ -21,8 +21,8 @@ export default function ProductDetails() {
   const [data, setData] = useState<Produto[]>([]);
 
   useEffect(() => {
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     getProduto()
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       .then((resp: any) => {
         setData(resp);
       })
@@ -34,20 +34,20 @@ export default function ProductDetails() {
   const product = data.find((p) => p.id_prod === productId);
 
   if (!product) {
-      return <p>Carregando produto...</p>;
+    return <p>Carregando produto...</p>;
   }
 
-  //  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   const router = useRouter();
 
   const handleAdicionarAoCarrinho = () => {
-    // if (!isAuthenticated) {
-    //     router.push("/login");
-    // } else {
-    adicionarAoCarrinho(product);
-    alert(`${product.nome_prod} foi adicionado ao carrinho!`);
-    // }
+    if (!isAuthenticated) {
+      router.push("/login");
+    } else {
+      adicionarAoCarrinho(product);
+      alert(`${product.nome_prod} foi adicionado ao carrinho!`);
+    }
   };
 
   return (
@@ -70,14 +70,13 @@ export default function ProductDetails() {
         <div className={styles.firstRow}>
           <div className={styles.container_imagens}>
             {product.images_prod.map((img) => (
-              <>
-                <Image
-                  src={img.path_image}
-                  alt={"produto"}
-                  width={107}
-                  height={93}
-                />
-              </>
+              <Image
+                key={img.id_image}
+                src={img.path_image}
+                alt={"produto"}
+                width={107}
+                height={93}
+              />
             ))}
           </div>
           <div className={styles.imagem_principal}>

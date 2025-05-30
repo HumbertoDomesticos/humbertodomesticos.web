@@ -14,6 +14,7 @@ import ProdutoParaComprar from "@/app/components/buying-product-component/page";
 // import { useAuth } from "@/app/context/AuthContext";
 import { useProduto } from "@/app/context/ProdutosContext";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/context/AuthContext";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -54,9 +55,9 @@ export default function FinalizarPedido() {
 
     const { carrinho, removerDoCarrinho, limparCarrinho, quantidadeItens } = useProduto();
 
-    // const { isAuthenticated } = useAuth();
+    const { isAuthenticated } = useAuth();
 
-    const router = useRouter();
+    // const router = useRouter();
 
     // if (!isAuthenticated) {
     //     router.push("/login");
@@ -90,7 +91,7 @@ export default function FinalizarPedido() {
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                             <Tab label="Pix" {...a11yProps(0)} />
-                            <Tab label="Boleto bancário" {...a11yProps(1)} />
+                            <Tab label="Transferência bancária" {...a11yProps(1)} />
                         </Tabs>
                     </Box>
                     <CustomTabPanel value={value} index={0}>
@@ -100,7 +101,7 @@ export default function FinalizarPedido() {
                         <Button variant="contained" sx={{
                             backgroundColor: "var(--primary-color)", boxShadow: 'none',
                             textTransform: "none"
-                        }}>Emitir boleto</Button>
+                        }}>Transferência bancária</Button>
                     </CustomTabPanel>
 
                     <div>
@@ -118,3 +119,4 @@ export default function FinalizarPedido() {
         </div>
     )
 }
+

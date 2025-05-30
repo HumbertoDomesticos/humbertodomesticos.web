@@ -18,8 +18,8 @@ export default function CarrinhoCompras() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
 
   useEffect(() => {
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     getProduto()
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       .then((resp: any) => {
         setProdutos(resp);
       })

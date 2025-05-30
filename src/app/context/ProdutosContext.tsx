@@ -51,17 +51,20 @@ export const ProdutoProvider: React.FC<ProdutoProviderProps> = ({ children }) =>
   });
 };
 
+const atualizarQuantidade = (produtoId: number, novaQuantidade: number) => {
+  if (novaQuantidade <= 0) {
+    removerDoCarrinho(produtoId);
+    return;
+  }
 
-  const atualizarQuantidade = (produtoId: number, novaQuantidade: number) => {
-    setCarrinho((prev) =>
-      prev.map(item =>
-        item.id_prod === produtoId
-          ? { ...item, quantidade: novaQuantidade }
-          : item
-      )
-    );
-  };
-
+  setCarrinho((prev) =>
+    prev.map(item =>
+      item.id_prod === produtoId
+        ? { ...item, quantidade: novaQuantidade }
+        : item
+    )
+  );
+};
 
   const removerDoCarrinho = (produtoId: number) => {
     setCarrinho((prev) => prev.filter(item => item.id_prod !== produtoId));

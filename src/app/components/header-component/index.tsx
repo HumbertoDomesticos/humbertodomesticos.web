@@ -11,13 +11,13 @@ import {
 } from "@phosphor-icons/react";
 import { IconButton, InputBase, Paper } from "@mui/material";
 import Link from "next/link";
-// import { useAuth } from '@/app/context/AuthContext';
+import { useAuth } from '@/app/context/AuthContext';
 import { type Usuario, getUsuario } from "@/services/routes/usuarios/page";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export function HeaderComponent() {
-  // const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
 
   const [usuario, setUsuario] = useState<Usuario[]>();
 
@@ -25,29 +25,29 @@ export function HeaderComponent() {
 
   const router = useRouter();
 
-//   useEffect(() => {
-//     const storedEmail = localStorage.getItem("userEmail");
-//     if (!storedEmail) {
-//       router.replace("/login");
-//       return;
-//     }
-//   }, [router]);
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("userEmail");
+    if (!storedEmail) {
+      router.replace("/login");
+      return;
+    }
+  }, [router]);
 
-//   useEffect(() => {
-//     getUsuario()
-//       .then((resp: Usuario[]) => {
-//         setUsuario(resp);
-//         const usuarioFiltrado = resp.find(
-//           (u) => u.email_usuario === user?.email_usuario
-//         );
-//         if (usuarioFiltrado) {
-//           setUsuarioLogado(usuarioFiltrado);
-//         }
-//       })
-//       .catch((err) => {
-//         console.log(err);
-//       });
-//   }, [user]);
+  useEffect(() => {
+    getUsuario()
+      .then((resp: Usuario[]) => {
+        setUsuario(resp);
+        const usuarioFiltrado = resp.find(
+          (u) => u.email_usuario === user?.email_usuario
+        );
+        if (usuarioFiltrado) {
+          setUsuarioLogado(usuarioFiltrado);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [user]);
 
   return (
     <div className={styles.content}>
@@ -105,47 +105,32 @@ export function HeaderComponent() {
             />
           </Link>
 
-          <div className={styles.profile}>
-            {/* <Link href="/login"> */}
-              <p>
-                {/* Faça login <br />
-                ou cadastre-se */}
-                Aléxia Cazale
-              </p>
-            {/* </Link> */}
-            <div className={styles.userProfile}>
-              <Link href="/meu-perfil">
-                <User size={24} color="white" />
-              </Link>
+          {isAuthenticated ? (
+            <div className={styles.profile}>
+              <div className={styles.userInfo}>
+                <p>{usuarioLogado?.nome_usuario || 'Usuário'}</p>
+              </div>
+              <div className={styles.userProfile}>
+                <Link href="/meu-perfil">
+                  <User size={24} color='white' />
+                </Link>
+              </div>
             </div>
-          </div>
-
-          {/* {isAuthenticated ? (
-                        <div className={styles.profile}>
-                            <div className={styles.userInfo}>
-                                <p>{usuarioLogado?.nome_usuario || 'Usuário'}</p>
-                            </div>
-                            <div className={styles.userProfile}>
-                                <Link href="/meu-perfil">
-                                    <User size={24} color='white' />
-                                </Link>
-                            </div>
-                        </div>
-                    ) : (
-                        <div className={styles.profile}>
-                            <Link href="/login">
-                                <p>
-                                    Faça login <br />
-                                    ou cadastre-se
-                                </p>
-                            </Link>
-                            <div className={styles.userProfile}>
-                                <Link href="/login">
-                                    <User size={24} color='white' />
-                                </Link>
-                            </div>
-                        </div>
-                    )} */}
+          ) : (
+            <div className={styles.profile}>
+              <Link href="/login">
+                <p>
+                  Faça login <br />
+                  ou cadastre-se
+                </p>
+              </Link>
+              <div className={styles.userProfile}>
+                <Link href="/login">
+                  <User size={24} color='white' />
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
