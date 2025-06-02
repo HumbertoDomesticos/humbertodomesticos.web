@@ -45,9 +45,9 @@ export default function Login() {
                 <h1>Faça login ou crie uma conta</h1>
 
                 <div className={styles.center}>
-                    <div className={styles.forms}>
-                        <h2>Quero criar uma conta</h2>
-                        <Box
+                    {/* <div className={styles.forms}>
+                        <h2>Quero criar uma conta</h2> */}
+                    {/* <Box
                             component="form"
                             noValidate
                             autoComplete="off"
@@ -61,9 +61,9 @@ export default function Login() {
                                 onChange={(e) => setEmail(e.target.value)}
                                 fullWidth
                             />
-                        </Box>
+                        </Box> */}
 
-                        <Link href="/cadastro" passHref legacyBehavior>
+                    {/* <Link href="/cadastro" passHref legacyBehavior>
                             <Button
                                 variant="contained"
                                 sx={{
@@ -76,7 +76,7 @@ export default function Login() {
                                 Continuar
                             </Button>
                         </Link>
-                    </div>
+                    </div> */}
 
                     <div className={styles.forms}>
                         <h2>Já sou cliente</h2>
@@ -95,7 +95,7 @@ export default function Login() {
                             }}
                             noValidate
                             autoComplete="off"
-                            // onSubmit={handleSubmit}
+                        // onSubmit={handleSubmit}
                         >
                             <TextField
                                 id="login-email"
@@ -132,6 +132,10 @@ export default function Login() {
                                     label="Senha"
                                 />
                             </FormControl>
+
+                            <div className={styles.hiperlink}>
+                                <Link href={"/cadastro"}><span>Quero criar uma conta</span></Link>
+                            </div>
 
                             <Button
                                 type="submit"

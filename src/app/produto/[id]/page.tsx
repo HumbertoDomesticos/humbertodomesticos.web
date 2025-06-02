@@ -1,5 +1,5 @@
 "use client";
-import { Typography, Rating, Button } from "@mui/material";
+import { Typography, Rating, Button, Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { HeaderComponent } from "../../components/header-component";
 import styles from "./styles.module.scss";
 import { House, CaretRight } from "@phosphor-icons/react";
@@ -15,10 +15,14 @@ import { useRouter } from "next/navigation";
 import { useProduto } from "@/app/context/ProdutosContext";
 
 export default function ProductDetails() {
+  const { atualizarQuantidade, removerDoCarrinho, adicionarAoCarrinho, quantidadeItens } = useProduto();
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
   const params = useParams();
   const productId = Number(params.id); // pegar id da rota
-  const { adicionarAoCarrinho, quantidadeItens } = useProduto();
   const [data, setData] = useState<Produto[]>([]);
+  // const [quantidades, setQuantidades] = useState<{ [id: number]: number }>({});
+  const [quantity, setQuantity] = useState('1');
 
   useEffect(() => {
     getProduto()
@@ -37,18 +41,25 @@ export default function ProductDetails() {
     return <p>Carregando produto...</p>;
   }
 
-  const { isAuthenticated } = useAuth();
 
-  const router = useRouter();
+  const handleChange = (event: SelectChangeEvent) => {
+    setQuantity(event.target.value as string);
+  };
 
   const handleAdicionarAoCarrinho = () => {
     if (!isAuthenticated) {
       router.push("/login");
     } else {
-      adicionarAoCarrinho(product);
-      alert(`${product.nome_prod} foi adicionado ao carrinho!`);
+      const quantidade = Number(quantity);
+
+      for (let i = 0; i < quantidade; i++) {
+        adicionarAoCarrinho(product);
+      }
+
+      alert(`${quantidade} unidade(s) de ${product.nome_prod} adicionada(s) ao carrinho!`);
     }
   };
+
 
   return (
     <>
@@ -100,6 +111,26 @@ export default function ProductDetails() {
                 em 8x de até R$400,00 sem juros no cartão de crédito
               </p> */}
             </div>
+
+            <Box sx={{ minWidth: 120,  width: "486.43px", }}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Quantidade: </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={quantity}
+                  label="Quantidade"
+                  onChange={handleChange}
+                >
+                  {Array.from({ length: product.estoque_prod }, (_, i) => (
+                    <MenuItem key={i + 1} value={i + 1}>
+                      {i + 1} unidade{i + 1 > 1 ? "s" : ""}
+                    </MenuItem>
+                  ))}
+                </Select>
+
+              </FormControl>
+            </Box>
 
             <div>
               <p className={styles.estoque}>Em estoque</p>

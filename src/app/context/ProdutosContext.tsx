@@ -11,6 +11,8 @@ interface ProdutoContextType {
   limparCarrinho: () => void;
   atualizarQuantidade: (produtoId: number, novaQuantidade: number) => void;
   quantidadeItens: number;
+  getQuantidade: (produtoId: number) => number;
+
 
 }
 
@@ -29,42 +31,42 @@ export const ProdutoProvider: React.FC<ProdutoProviderProps> = ({ children }) =>
   const [carrinho, setCarrinho] = useState<ProdutoCarrinho[]>([]);
 
   const adicionarAoCarrinho = (produto: Produto) => {
-  setCarrinho((prev) => {
-    const produtoExistente = prev.find(item => item.id_prod === produto.id_prod);
+    setCarrinho((prev) => {
+      const produtoExistente = prev.find(item => item.id_prod === produto.id_prod);
 
-    if (produtoExistente) {
-      // Já está no carrinho, incrementa se não ultrapassar o estoque
-      if (produtoExistente.quantidade < produto.estoque_prod) {
-        return prev.map(item =>
-          item.id_prod === produto.id_prod
-            ? { ...item, quantidade: item.quantidade + 1 }
-            : item
-        );
-      // biome-ignore lint/style/noUselessElse: <explanation>
-      } else {
-        return prev; // Não ultrapassa o estoque
+      if (produtoExistente) {
+        // Já está no carrinho, incrementa se não ultrapassar o estoque
+        if (produtoExistente.quantidade < produto.estoque_prod) {
+          return prev.map(item =>
+            item.id_prod === produto.id_prod
+              ? { ...item, quantidade: item.quantidade + 1 }
+              : item
+          );
+          // biome-ignore lint/style/noUselessElse: <explanation>
+        } else {
+          return prev; // Não ultrapassa o estoque
+        }
       }
+
+      // Adiciona novo com quantidade 1
+      return [...prev, { ...produto, quantidade: 1 }];
+    });
+  };
+
+  const atualizarQuantidade = (produtoId: number, novaQuantidade: number) => {
+    if (novaQuantidade <= 0) {
+      removerDoCarrinho(produtoId);
+      return;
     }
 
-    // Adiciona novo com quantidade 1
-    return [...prev, { ...produto, quantidade: 1 }];
-  });
-};
-
-const atualizarQuantidade = (produtoId: number, novaQuantidade: number) => {
-  if (novaQuantidade <= 0) {
-    removerDoCarrinho(produtoId);
-    return;
-  }
-
-  setCarrinho((prev) =>
-    prev.map(item =>
-      item.id_prod === produtoId
-        ? { ...item, quantidade: novaQuantidade }
-        : item
-    )
-  );
-};
+    setCarrinho((prev) =>
+      prev.map(item =>
+        item.id_prod === produtoId
+          ? { ...item, quantidade: novaQuantidade }
+          : item
+      )
+    );
+  };
 
   const removerDoCarrinho = (produtoId: number) => {
     setCarrinho((prev) => prev.filter(item => item.id_prod !== produtoId));
@@ -73,6 +75,11 @@ const atualizarQuantidade = (produtoId: number, novaQuantidade: number) => {
   const limparCarrinho = () => {
     setCarrinho([]);
   };
+
+  const getQuantidade = (produtoId: number) => {
+    return carrinho.find(item => item.id_prod === produtoId)?.quantidade || 0;
+  };
+
 
   const quantidadeItens = carrinho.reduce((total, item) => total + item.quantidade, 0);
 
@@ -85,6 +92,7 @@ const atualizarQuantidade = (produtoId: number, novaQuantidade: number) => {
         limparCarrinho,
         quantidadeItens,
         atualizarQuantidade,
+        getQuantidade,
       }}
     >
       {children}

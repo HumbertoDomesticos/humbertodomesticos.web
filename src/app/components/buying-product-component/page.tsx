@@ -28,13 +28,9 @@ export default function ProdutoParaComprar({ isBuying }: ProdutoParaComprarProps
     };
 
     const handleDecrement = (produtoId: number, quantidadeAtual: number) => {
-        if (quantidadeAtual > 1) {
+        if (quantidadeAtual > 0) {
             atualizarQuantidade(produtoId, quantidadeAtual - 1);
         }
-
-        // if (quantidadeAtual === 0) {
-        //     removerDoCarrinho(produtoId)
-        // }
     };
 
     return (
@@ -58,6 +54,7 @@ export default function ProdutoParaComprar({ isBuying }: ProdutoParaComprarProps
                                     <button type="button" onClick={() => handleDecrement(produto.id_prod, produto.quantidade)}>-</button>
 
                                     <input
+                                        readOnly
                                         type="number"
                                         value={quantidades[produto.id_prod] ?? produto.quantidade}
                                         onChange={(e) => {
@@ -67,7 +64,7 @@ export default function ProdutoParaComprar({ isBuying }: ProdutoParaComprarProps
                                         onBlur={() => {
                                             const quantidadeFinal = quantidades[produto.id_prod];
 
-                                            if (quantidadeFinal <= 0 ) {
+                                            if (quantidadeFinal <= 0) {
                                                 removerDoCarrinho(produto.id_prod);
                                             } else if (quantidadeFinal <= produto.estoque_prod) {
                                                 atualizarQuantidade(produto.id_prod, quantidadeFinal);

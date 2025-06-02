@@ -25,6 +25,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import 'dayjs/locale/pt-br';
+dayjs.locale('pt-br');
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -39,6 +42,7 @@ export default function Login() {
   const handleMouseUpPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
+
 
   const [nascimento, setNascimento] = useState<Dayjs | null>(null);
 
@@ -67,23 +71,21 @@ export default function Login() {
     nomeResponsavel: '',
   });
 
- const handleSubmit = async () => {
-  const usuarioPayload: Usuario = {
-    nome_usuario: formData.nome,
-    email_usuario: formData.email,
-    cpf_usuario: formData.cpf,
-    senha_usuario_temp: formData.senha,
-    data_nasc_usuario: nascimento?.startOf('day').toISOString().split('T')[0] ?? ''
+  const handleSubmit = async () => {
+    const usuarioPayload: Usuario = {
+      nome_usuario: formData.nome,
+      email_usuario: formData.email,
+      cpf_usuario: formData.cpf,
+      senha_usuario_temp: formData.senha,
+      data_nasc_usuario: nascimento?.startOf('day').toISOString().split('T')[0] ?? ''
+    };
+
+    try {
+      await postUsuario(usuarioPayload);
+    } catch (err) {
+      console.error('Erro ao criar usuário:', err);
+    }
   };
-
-  try {
-    await postUsuario(usuarioPayload);
-  } catch (err) {
-    console.error('Erro ao criar usuário:', err);
-  }
-};
-
-
 
   return (
     <div>
@@ -125,9 +127,26 @@ export default function Login() {
               {accountType === "Pessoa física" ? (
                 <>
                   <h1>Dados pessoais</h1>
-                  <TextField id="cpf" label="CPF" variant="outlined" onChange={(e) => setFormData({ ...formData, cpf: e.target.value })} />
+                  <TextField
+                    label="CPF"
+                    variant="outlined"
+                    value={formData.cpf}
+                    onChange={(e) => {
+                      const raw = e.target.value.replace(/\D/g, '');
+                      if (raw.length <= 11) {
+                        const masked = raw
+                          .replace(/^(\d{3})(\d)/, '$1.$2')
+                          .replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3')
+                          .replace(/\.(\d{3})(\d)/, '.$1-$2');
+                        setFormData({ ...formData, cpf: e.target.value });
+                      }
+                    }}
+                    inputMode="numeric"
+                  />
+
                   <TextField id="nome" label="Nome completo" variant="outlined" onChange={(e) => setFormData({ ...formData, nome: e.target.value })} />
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+
+                  <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
                     <DatePicker
                       label="Data de nascimento"
                       value={nascimento}
@@ -135,6 +154,7 @@ export default function Login() {
                         setNascimento(newValue);
                         setFormData({ ...formData, nascimento: newValue ? newValue.toISOString() : '' });
                       }}
+                      format="DD/MM/YYYY"
                       slotProps={{
                         textField: {
                           variant: 'outlined',
@@ -143,7 +163,6 @@ export default function Login() {
                       }}
                     />
                   </LocalizationProvider>
-
                   {/* <TextField id="nascimento" label="Data de nascimento" variant="outlined" /> */}
                 </>
               ) : (
@@ -159,7 +178,7 @@ export default function Login() {
                 </>
               )}
 
-              <FormControl sx={{ width: '25ch' }} variant="outlined">
+              <FormControl sx={{ width: '25ch', marginTop: "15px"}} variant="outlined">
                 <InputLabel htmlFor="senha">Senha</InputLabel>
                 <OutlinedInput
                   id="senha"

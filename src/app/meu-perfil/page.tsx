@@ -16,6 +16,7 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
+import { useProduto } from "../context/ProdutosContext";
 
 
 export default function Perfil() {
@@ -24,7 +25,7 @@ export default function Perfil() {
 
     const [usuarioLogado, setUsuarioLogado] = useState<Usuario>();
 
-    const { user } = useAuth()
+    const { user, logout } = useAuth()
 
     const router = useRouter();
 
@@ -159,6 +160,14 @@ export default function Perfil() {
                             backgroundColor: "var(--primary-color)", boxShadow: 'none',
                             textTransform: "none", width: "220px"
                         }}>Salvar</Button>
+                    </div>
+
+                    <div className={styles.button}>
+                        <Button variant="contained" href="/" onClick={logout} sx={{
+                            backgroundColor: "#e50000", boxShadow: 'none',
+                            textTransform: "none", width: "220px"
+                        }
+                        }>Sair</Button>
                     </div>
 
 
