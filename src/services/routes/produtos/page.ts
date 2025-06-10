@@ -6,27 +6,25 @@ export interface ProdutoApi {
 }
 
 export interface IImage{
-  path_image: string;
-  id_prod_images: number;
-  id_image: number;
+  url_img: string;
 }
 
 export interface Produto {
-  nome_prod: string;
-  descricao_prod: string;
-  desconto_prod: number;
-  estoque_prod: number;
-  id_prod: number;
+  id_produto: number;
+  descritivo_produto: string;
+  descricao_produto: string;
+  estoque_produto: number;
   quantidade: number;
-  preco_produto: string;
-  desconto_preco_produto: string;
-  images_prod: IImage[];
+  preco: string;
+  desconto: number;
+  preco_descontado: string;
+  imagens: IImage[];
 }
 
 export async function getProduto(): Promise<AxiosResponse> {
   try {
     const response = await axios.get('http://127.0.0.1:8000/produtos');
-    return response.data;
+    return response.data.data;
   } catch (error) {
     console.error(error);
     throw error;
