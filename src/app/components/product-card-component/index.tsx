@@ -17,7 +17,7 @@ export function ProductCard({ name, price, image }: ProductCardProps) {
         <div className={styles.content}>
             <div className={styles.card}>
                 <div className={styles.cardImage}>
-                    <Image src={image[0].path_image} alt={""} width={180} height={165} />
+                    <Image src={image[0].url_img} alt={""} width={180} height={165} />
                 </div>
                 <div className={styles.cardDescription}>
                     <div className={styles.cardStars}>

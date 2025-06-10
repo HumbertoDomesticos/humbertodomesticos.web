@@ -21,7 +21,7 @@ export function ProductCardPromo({name, price, oldPrice, promo, image} : Product
             <div className={styles.card}>
                 <div className={styles.cardImage}>
                     {/* Imagem do produto */}
-                    <Image src={image[0].path_image} alt={""} width={180} height={165} />
+                    <Image src={image[0].url_img} alt={""} width={180} height={165} />
                     {/* {JSON.stringify(image.map((i) => i.path_image[0]))} */}
                 </div>
                 <div className={styles.cardDescription}>
@@ -50,7 +50,7 @@ export function ProductCardPromo({name, price, oldPrice, promo, image} : Product
                         <div className={styles.cardNewPrice}>
                             <h2>{price}</h2>
                             <div className={styles.discount}>
-                                <span>{promo}%</span>
+                                <span>{promo}</span>
                             </div>
                         </div>
                         <div className={styles.oldPrice}>

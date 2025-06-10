@@ -69,15 +69,17 @@ export default function Login() {
     fantasia: '',
     inscricao: '',
     nomeResponsavel: '',
+    genero_usuario: '',
   });
 
   const handleSubmit = async () => {
     const usuarioPayload: Usuario = {
       nome_usuario: formData.nome,
       email_usuario: formData.email,
-      cpf_usuario: formData.cpf,
+      cpf: formData.cpf,
       senha_usuario_temp: formData.senha,
-      data_nasc_usuario: nascimento?.startOf('day').toISOString().split('T')[0] ?? ''
+      genero_usuario: formData.genero_usuario,
+      // data_nasc_usuario: nascimento?.startOf('day').toISOString().split('T')[0] ?? '',
     };
 
     try {
@@ -164,6 +166,21 @@ export default function Login() {
                     />
                   </LocalizationProvider>
                   {/* <TextField id="nascimento" label="Data de nascimento" variant="outlined" /> */}
+
+                  <FormControl>
+                    <FormLabel id="genero-usuario-label">Gênero</FormLabel>
+                    <RadioGroup
+                      aria-labelledby="genero-usuario-label"
+                      name="genero-usuario"
+                      value={formData.genero_usuario}
+                      onChange={(e) => setFormData({ ...formData, genero_usuario: e.target.value })}
+                    >
+                      <FormControlLabel value="feminino" control={<Radio />} label="Feminino" />
+                      <FormControlLabel value="masculino" control={<Radio />} label="Masculino" />
+                      <FormControlLabel value="outro" control={<Radio />} label="Outro" />
+                    </RadioGroup>
+                  </FormControl>
+
                 </>
               ) : (
                 <>
@@ -178,7 +195,7 @@ export default function Login() {
                 </>
               )}
 
-              <FormControl sx={{ width: '25ch', marginTop: "15px"}} variant="outlined">
+              <FormControl sx={{ width: '25ch', marginTop: "15px" }} variant="outlined">
                 <InputLabel htmlFor="senha">Senha</InputLabel>
                 <OutlinedInput
                   id="senha"

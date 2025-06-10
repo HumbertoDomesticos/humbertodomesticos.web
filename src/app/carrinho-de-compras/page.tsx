@@ -11,11 +11,16 @@ import { type Produto, getProduto } from "@/services/routes/produtos/page";
 import { useState, useEffect } from "react";
 import ProdutoParaComprar from "../components/buying-product-component/page";
 import { useProduto } from "../context/ProdutosContext";
+import { getPedidoAberto } from "@/services/routes/pedidos/page";
+import { useAuth } from "../context/AuthContext";
 
 export default function CarrinhoCompras() {
   const { carrinho, removerDoCarrinho, limparCarrinho, quantidadeItens } =
     useProduto();
+  const { user } = useAuth();
+
   const [produtos, setProdutos] = useState<Produto[]>([]);
+  const [produtosCarrinho, setProdutosCarrinho] = useState<Produto[]>([]);
 
   useEffect(() => {
     getProduto()
@@ -28,11 +33,36 @@ export default function CarrinhoCompras() {
       });
   }, []);
 
+
+  useEffect(() => {
+    if (!user?.id_usuario) {
+      return;
+    }
+
+    const fetchPedidoAberto = async () => {
+      try {
+        const response = await getPedidoAberto(user?.id_usuario!);
+        // Extract products from the order response
+        const produtos = response.data.produtos_em_pedido.map(item => ({
+          ...item.produto,
+          quantidade: item.quant_produto_em_pedido
+        }));
+        console.log(produtos)
+        setProdutosCarrinho(produtos);
+      } catch (err) {
+        console.error("Failed to fetch cart:", err);
+      }
+    };
+
+    fetchPedidoAberto();
+  }, [user?.id_usuario, carrinho]); // Add carrinho as dependency
+
+
   const calcularSubtotal = () => {
-    return carrinho.reduce((total, produto) => {
+    return produtosCarrinho.reduce((total, produto) => {
       const preco =
         Number(
-          produto.desconto_preco_produto
+          produto.preco_descontado
             ?.toString()
             .replace("R$", "")
             .replace(",", ".")
@@ -42,6 +72,14 @@ export default function CarrinhoCompras() {
       return total + preco * quantidade;
     }, 0);
   };
+
+  let quantidade = 0
+
+  for (let i = 0; i < produtosCarrinho.map((e) => e.quantidade).length; i++) {
+    quantidade += i
+  }
+
+  produtosCarrinho.map((e) => e.quantidade)
 
   const subtotal = calcularSubtotal();
   const frete = 0; // pode ser alterado no futuro
@@ -63,7 +101,7 @@ export default function CarrinhoCompras() {
         </span>
       </div>
 
-      {carrinho.length === 0 ? (
+      {produtosCarrinho.length === 0 ? (
         <>
           <div className={`${styles.container} container_info`}>
             <Image src={"/carrinho.png"} alt={""} width={144} height={144} />
@@ -98,7 +136,7 @@ export default function CarrinhoCompras() {
               <div className={styles.produtoResumo}>
                 <div>
                   <div className={styles.aside}>
-                    <p>Produto ({quantidadeItens})</p>
+                    <p>Produto ({quantidade})</p>
                     <p>R$ {subtotal.toFixed(2).replace(".", ",")}</p>
                   </div>
                   <div className={styles.aside}>

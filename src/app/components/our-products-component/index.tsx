@@ -14,8 +14,8 @@ export function OurProductsComponent({ produtos }: ProdutoApi) {
       </div>
       <div className={styles.productCards}>
         {displayedProducts.map((product) => (
-          <Link key={product.id_prod} href={`/produto/${product.id_prod}`} passHref>
-            <ProductCard key={product.id_prod} name={product.nome_prod} price={product.preco_produto} image={product.images_prod} />
+          <Link key={product.id_produto} href={`/produto/${product.id_produto}`} passHref>
+            <ProductCard key={product.id_produto} name={product.descritivo_produto} price={product.preco} image={product.imagens} />
           </Link>
         ))}
       </div>

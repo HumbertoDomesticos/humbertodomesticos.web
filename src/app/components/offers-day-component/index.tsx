@@ -24,7 +24,7 @@ export function OffersDayComponent({ produtos }: ProdutoApi) {
         );
     };
 
-    const visibleProducts = produtos.slice(currentIndex, currentIndex + itemsPerPage);
+    // const visibleProducts = produtos.slice(currentIndex, currentIndex + itemsPerPage);
 
     return (
         <div className={`${styles.section} container_info`} id='ofertas-dia'>
@@ -32,18 +32,19 @@ export function OffersDayComponent({ produtos }: ProdutoApi) {
             <div className={styles.carouselContainer}>
 
                 <div className={`${styles.productCards} ${styles[transitionDirection]}`}>
-                    {visibleProducts.map((product) => (
-                        <Link key={product.id_prod} href={`/produto-promo/${product.id_prod}`} passHref>
+                    {produtos.map((product) => (
+                        <Link key={product.id_produto} href={`/produto-promo/${product.id_produto}`} passHref>
                             <ProductCardPromo
-                                name={product.nome_prod}
-                                price={product.desconto_preco_produto}
-                                oldPrice={product.preco_produto}
-                                promo={product.desconto_prod}
-                                image={product.images_prod}
+                                name={product.descritivo_produto}
+                                price={product.preco_descontado}
+                                oldPrice={product.preco}
+                                promo={product.desconto}
+                                image={product.imagens}
                                 // image.map((i) => i.path_image[0])
                             />
                         </Link>
                     ))}
+
                 </div>
 
                 {/* biome-ignore lint/a11y/useButtonType: <explanation> */}

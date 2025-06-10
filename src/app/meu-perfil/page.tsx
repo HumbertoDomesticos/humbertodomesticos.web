@@ -124,19 +124,19 @@ export default function Perfil() {
                                     <RadioGroup
                                         row
                                         aria-labelledby="demo-radio-buttons-group-label"
-                                        defaultValue="female"
+                                        defaultValue={usuarioLogado?.genero_usuario}
                                         name="radio-buttons-group"
                                     >
 
-                                        <FormControlLabel value="female" control={<Radio />} label="Feminino" />
-                                        <FormControlLabel value="male" control={<Radio />} label="Masculino" />
-                                        <FormControlLabel value="other" control={<Radio />} label="Outro" />
+                                        <FormControlLabel value="feminino" control={<Radio />} label="Feminino" />
+                                        <FormControlLabel value="masculino" control={<Radio />} label="Masculino" />
+                                        <FormControlLabel value="outro" control={<Radio />} label="Outro" />
                                     </RadioGroup>
 
                                 </div>
                                 <div className={styles.flex}>
                                     {/* <p>06*.***.**-*0</p> */}
-                                    <p>{usuarioLogado?.cpf_usuario}</p>
+                                    <p>{usuarioLogado?.cpf}</p>
                                     <PencilSimpleLine size={16} />
                                 </div>
 

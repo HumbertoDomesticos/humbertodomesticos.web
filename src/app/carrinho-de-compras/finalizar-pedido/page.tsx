@@ -15,6 +15,8 @@ import ProdutoParaComprar from "@/app/components/buying-product-component/page";
 import { useProduto } from "@/app/context/ProdutosContext";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/context/AuthContext";
+import { postFecharPedido } from "@/services/routes/pedidos/page";
+import BasicModal from "@/app/components/add-adress/page";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -49,19 +51,35 @@ export default function FinalizarPedido() {
 
     const [value, setValue] = useState(0);
 
+    const [addAddress, setAddAddress] = useState(false);
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
 
     const { carrinho, removerDoCarrinho, limparCarrinho, quantidadeItens } = useProduto();
 
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, user } = useAuth();
 
     // const router = useRouter();
 
     // if (!isAuthenticated) {
     //     router.push("/login");
     //     return null;
+    // }
+
+    // const handleFinalizarPedido = async () => {
+    //     try {
+    //         const response = await postFecharPedido(user?.id_usuario!);
+    //         // Extract products from the order response
+    //         const produtos = response.data.produtos_em_pedido.map(item => ({
+    //             ...item.produto,
+    //             quantidade: item.quant_produto_em_pedido
+    //         }));
+    //         console.log(produtos)
+    //         setProdutosCarrinho(produtos);
+    //     } catch (err) {
+    //         console.error("Failed to fetch cart:", err);
+    //     }
     // }
 
     return (
@@ -79,7 +97,23 @@ export default function FinalizarPedido() {
             <div className={`${styles.content} container_info`}>
                 <div className={styles.section}>
                     <h1>Endereço de entrega</h1>
+                    {user?.enderecos?.length! <= 0 ?
+                        (
+                            <Button variant="contained" sx={{
+                                backgroundColor: "var(--primary-color)", boxShadow: 'none',
+                                textTransform: "none"
+                            }
+                            } onClick={() => setAddAddress(true)}>Adicionar endereço</Button>
+                        ) : (
+                            <span>{user?.enderecos?.map((end) => end.rua_endereco)}</span>
+                        )
+                    }
+
                 </div>
+
+                {addAddress && (
+                    <BasicModal />
+                )}
 
                 <div className={styles.section}>
                     <h1>Produtos pedidos</h1>

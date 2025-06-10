@@ -19,9 +19,8 @@ export default function ProductDetails() {
   const { isAuthenticated } = useAuth();
   const router = useRouter();
   const params = useParams();
-  const productId = Number(params.id); // pegar id da rota
+  const productId = Number(params.id); 
   const [data, setData] = useState<Produto[]>([]);
-  // const [quantidades, setQuantidades] = useState<{ [id: number]: number }>({});
   const [quantity, setQuantity] = useState('1');
 
   useEffect(() => {
@@ -35,12 +34,11 @@ export default function ProductDetails() {
       });
   }, []);
 
-  const product = data.find((p) => p.id_prod === productId);
+  const product = data.find((p) => p.id_produto === productId);
 
   if (!product) {
     return <p>Carregando produto...</p>;
   }
-
 
   const handleChange = (event: SelectChangeEvent) => {
     setQuantity(event.target.value as string);
@@ -56,10 +54,9 @@ export default function ProductDetails() {
         adicionarAoCarrinho(product);
       }
 
-      alert(`${quantidade} unidade(s) de ${product.nome_prod} adicionada(s) ao carrinho!`);
+      alert(`${quantidade} unidade(s) de ${product.descritivo_produto} adicionada(s) ao carrinho!`);
     }
   };
-
 
   return (
     <>
@@ -77,13 +74,12 @@ export default function ProductDetails() {
         </span>
       </div>
 
-      <div className={`${styles.content} container_info`} key={product.id_prod}>
+      <div className={`${styles.content} container_info`} key={product.id_produto}>
         <div className={styles.firstRow}>
           <div className={styles.container_imagens}>
-            {product.images_prod.map((img) => (
+            {product.imagens.map((img) => (
               <Image
-                key={img.id_image}
-                src={img.path_image}
+                src={img.url_img}
                 alt={"produto"}
                 width={107}
                 height={93}
@@ -92,7 +88,7 @@ export default function ProductDetails() {
           </div>
           <div className={styles.imagem_principal}>
             <Image
-              src={product.images_prod[0].path_image}
+              src={product.imagens[0].url_img}
               alt={"produto"}
               width={473}
               height={400}
@@ -100,11 +96,11 @@ export default function ProductDetails() {
           </div>
           <div className={styles.descricao}>
             <div className={styles.text}>
-              <h1>{product.nome_prod}</h1>
+              <h1>{product.descritivo_produto}</h1>
               <Rating name="read-only" value={5} readOnly />
 
               <p className={styles.preco_atual}>
-                Por {product.desconto_preco_produto}
+                Por {product.preco_descontado}
               </p>
 
               {/* <p className={styles.parcelas}>
@@ -122,7 +118,7 @@ export default function ProductDetails() {
                   label="Quantidade"
                   onChange={handleChange}
                 >
-                  {Array.from({ length: product.estoque_prod }, (_, i) => (
+                  {Array.from({ length: product.estoque_produto }, (_, i) => (
                     <MenuItem key={i + 1} value={i + 1}>
                       {i + 1} unidade{i + 1 > 1 ? "s" : ""}
                     </MenuItem>
@@ -135,7 +131,7 @@ export default function ProductDetails() {
             <div>
               <p className={styles.estoque}>Em estoque</p>
               <p className={styles.estoque}>
-                {product.estoque_prod} unidades restantes
+                {product.estoque_produto} unidades restantes
               </p>
 
               <Button
@@ -174,7 +170,7 @@ export default function ProductDetails() {
 
         <div className={styles.secondRow}>
           <h2>Informações do produto</h2>
-          <p>{product.descricao_prod}</p>
+          <p>{product.descricao_produto}</p>
         </div>
 
         <div className={styles.thirdRow}>

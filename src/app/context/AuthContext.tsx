@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       try {
-        const parsedUser = JSON.parse(storedUser);
+        const parsedUser = JSON.parse(storedUser) as Usuario;
         setUser(parsedUser);
       } catch (e) {
         console.error('Erro ao fazer parse do usuário:', e);
@@ -41,8 +41,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setError(null);
 
     try {
-      const response = await axios.post(
-        'http://127.0.0.1:8000/usuarios/auth',
+      const response = await axios.post<Usuario>(
+        'http://127.0.0.1:8000/usuarios/login',
         {
           email_usuario: email,
           senha_usuario: senha
@@ -52,10 +52,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
       );
 
-      if (response.data === true) {
-        const userObj: Usuario = { email_usuario: email } as Usuario;
-        setUser(userObj);
-        localStorage.setItem('user', JSON.stringify(userObj));
+      if (response.data) {
+        const userData = response.data;
+        setUser(userData);
+        localStorage.setItem('user', JSON.stringify(userData));
         router.push('/');
       } else {
         throw new Error('Credenciais inválidas');

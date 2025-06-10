@@ -12,8 +12,6 @@ interface ProdutoContextType {
   atualizarQuantidade: (produtoId: number, novaQuantidade: number) => void;
   quantidadeItens: number;
   getQuantidade: (produtoId: number) => number;
-
-
 }
 
 interface ProdutoCarrinho extends Produto {
@@ -32,13 +30,13 @@ export const ProdutoProvider: React.FC<ProdutoProviderProps> = ({ children }) =>
 
   const adicionarAoCarrinho = (produto: Produto) => {
     setCarrinho((prev) => {
-      const produtoExistente = prev.find(item => item.id_prod === produto.id_prod);
+      const produtoExistente = prev.find(item => item.id_produto === produto.id_produto);
 
       if (produtoExistente) {
         // Já está no carrinho, incrementa se não ultrapassar o estoque
-        if (produtoExistente.quantidade < produto.estoque_prod) {
+        if (produtoExistente.quantidade < produto.estoque_produto) {
           return prev.map(item =>
-            item.id_prod === produto.id_prod
+            item.id_produto === produto.id_produto
               ? { ...item, quantidade: item.quantidade + 1 }
               : item
           );
@@ -61,7 +59,7 @@ export const ProdutoProvider: React.FC<ProdutoProviderProps> = ({ children }) =>
 
     setCarrinho((prev) =>
       prev.map(item =>
-        item.id_prod === produtoId
+        item.id_produto === produtoId
           ? { ...item, quantidade: novaQuantidade }
           : item
       )
@@ -69,7 +67,7 @@ export const ProdutoProvider: React.FC<ProdutoProviderProps> = ({ children }) =>
   };
 
   const removerDoCarrinho = (produtoId: number) => {
-    setCarrinho((prev) => prev.filter(item => item.id_prod !== produtoId));
+    setCarrinho((prev) => prev.filter(item => item.id_produto !== produtoId));
   };
 
   const limparCarrinho = () => {
@@ -77,7 +75,7 @@ export const ProdutoProvider: React.FC<ProdutoProviderProps> = ({ children }) =>
   };
 
   const getQuantidade = (produtoId: number) => {
-    return carrinho.find(item => item.id_prod === produtoId)?.quantidade || 0;
+    return carrinho.find(item => item.id_produto === produtoId)?.quantidade || 0;
   };
 
 

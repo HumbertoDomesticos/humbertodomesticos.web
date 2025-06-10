@@ -14,18 +14,18 @@ import { useProduto } from "@/app/context/ProdutosContext";
 import { useRouter } from "next/navigation";
 import router from "next/router";
 import { useAuth } from "@/app/context/AuthContext";
+import { getPedidoAberto, postPedido, postProdutoEmPedido } from "@/services/routes/pedidos/page";
 
 export default function ProductPromoDetails() {
   const { adicionarAoCarrinho, quantidadeItens } = useProduto();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [data, setData] = useState<Produto[]>([]);
   const params = useParams();
   const productId = Number(params.id);
   const [quantity, setQuantity] = useState('1');
-
   useEffect(() => {
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     getProduto()
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       .then((resp: any) => {
         setData(resp);
       })
@@ -34,7 +34,7 @@ export default function ProductPromoDetails() {
       });
   }, []);
 
-  const product = data.find((p) => p.id_prod === productId);
+  const product = data.find((p) => p.id_produto === productId);
 
   if (!product) {
     return <p>Carregando produto...</p>;
@@ -47,17 +47,26 @@ export default function ProductPromoDetails() {
     setQuantity(event.target.value as string);
   };
 
-  const handleAdicionarAoCarrinho = () => {
+  const handleAdicionarAoCarrinho = async () => {
     if (!isAuthenticated) {
       router.push("/login");
-    } else {
+      return;
+    }
+    try {
       const quantidade = Number(quantity);
 
-      for (let i = 0; i < quantidade; i++) {
-        adicionarAoCarrinho(product);
-      }
+      const orderResponse = await getPedidoAberto(user?.id_usuario!);
 
-      alert(`${quantidade} unidade(s) de ${product.nome_prod} adicionada(s) ao carrinho!`);
+      await postProdutoEmPedido(
+        user?.id_usuario!,
+        productId,
+        quantidade
+      );
+
+      adicionarAoCarrinho(product);
+
+    } catch (error) {
+      console.error("Failed to add to cart:", error);
     }
   };
 
@@ -78,13 +87,12 @@ export default function ProductPromoDetails() {
         </span>
       </div>
 
-      <div className={`${styles.content} container_info`} key={product.id_prod}>
+      <div className={`${styles.content} container_info`} key={product.id_produto}>
         <div className={styles.firstRow}>
           <div className={styles.container_imagens}>
-            {product.images_prod.map((img) => (
+            {product.imagens.map((img) => (
               <Image
-                key={img.path_image}
-                src={img.path_image}
+                src={img.url_img}
                 alt="produto"
                 width={107}
                 height={93}
@@ -93,7 +101,7 @@ export default function ProductPromoDetails() {
           </div>
           <div className={styles.imagem_principal}>
             <Image
-              src={product.images_prod[0].path_image}
+              src={product.imagens[0].url_img}
               alt={"produto"}
               width={473}
               height={400}
@@ -101,23 +109,23 @@ export default function ProductPromoDetails() {
           </div>
           <div className={styles.descricao}>
             <div className={styles.text}>
-              <h1>{product.nome_prod}</h1>
+              <h1>{product.descritivo_produto}</h1>
               <Rating name="read-only" value={5} readOnly />
               <p className={styles.preco_original}>
-                De {product.preco_produto}
+                De {product.preco}
               </p>
               <div className={styles.preco}>
                 <p className={styles.preco_atual}>
-                  Por {product.desconto_preco_produto}
+                  Por {product.preco_descontado}
                 </p>
-                <span>{product.desconto_prod}% OFF</span>
+                <span>{product.desconto}% OFF</span>
               </div>
               {/* <p className={styles.parcelas}>
                 em 8x de até R$400,00 sem juros no cartão de crédito
               </p> */}
             </div>
 
-            <Box sx={{ minWidth: 120,  width: "486.43px", }}>
+            <Box sx={{ minWidth: 120, width: "486.43px", }}>
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Quantidade: </InputLabel>
                 <Select
@@ -127,7 +135,7 @@ export default function ProductPromoDetails() {
                   label="Quantidade"
                   onChange={handleChange}
                 >
-                  {Array.from({ length: product.estoque_prod }, (_, i) => (
+                  {Array.from({ length: product.estoque_produto }, (_, i) => (
                     <MenuItem key={i + 1} value={i + 1}>
                       {i + 1} unidade{i + 1 > 1 ? "s" : ""}
                     </MenuItem>
@@ -140,7 +148,7 @@ export default function ProductPromoDetails() {
             <div>
               <p className={styles.estoque}>Em estoque</p>
               <p className={styles.estoque}>
-                {product.estoque_prod} unidades restantes
+                {product.estoque_produto} unidades restantes
               </p>
               {/* <input type="submit" value="Continuar a compra" className={styles.continuar} /> */}
 
@@ -182,7 +190,7 @@ export default function ProductPromoDetails() {
 
         <div className={styles.secondRow}>
           <h2>Informações do produto</h2>
-          <p>{product.descricao_prod}</p>
+          <p>{product.descricao_produto}</p>
         </div>
 
         <div className={styles.thirdRow}>
