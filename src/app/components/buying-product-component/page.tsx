@@ -1,11 +1,11 @@
 import Image from "next/image";
 import styles from "./styles.module.scss";
 import { useProduto } from "@/app/context/ProdutosContext";
-import { useEffect, useState } from "react";
 import { Produto } from "@/services/routes/produtos/page";
 import { getPedidoAberto } from "@/services/routes/pedidos/page";
 import { useAuth } from "@/app/context/AuthContext";
 import { IPedidos } from "@/services/routes/pedidos/page";
+import react from "react";
 
 interface ProdutoParaComprarProps {
     isBuying: boolean;
@@ -19,12 +19,12 @@ export default function ProdutoParaComprar({ isBuying }: ProdutoParaComprarProps
     } = useProduto();
     const { user } = useAuth();
 
-    const [produtosCarrinho, setProdutosCarrinho] = useState<Produto[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [quantidades, setQuantidades] = useState<{ [id: number]: number }>({});
+    const [produtosCarrinho, setProdutosCarrinho] = react.useState<Produto[]>([]);
+    const [loading, setLoading] = react.useState(true);
+    const [error, setError] = react.useState<string | null>(null);
+    const [quantidades, setQuantidades] = react.useState<{ [id: number]: number }>({});
 
-    useEffect(() => {
+    react.useEffect(() => {
         if (!user?.id_usuario) {
             setLoading(false);
             return;

@@ -1,5 +1,15 @@
 "use client";
-import { Typography, Rating, Button, Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import {
+  Typography,
+  Rating,
+  Button,
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
 import { HeaderComponent } from "../../components/header-component";
 import styles from "./styles.module.scss";
 import { House, CaretRight } from "@phosphor-icons/react";
@@ -13,15 +23,24 @@ import Link from "next/link";
 import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useProduto } from "@/app/context/ProdutosContext";
+import {
+  getPedidoAberto,
+  postProdutoEmPedido,
+} from "@/services/routes/pedidos/page";
 
 export default function ProductDetails() {
-  const { atualizarQuantidade, removerDoCarrinho, adicionarAoCarrinho, quantidadeItens } = useProduto();
-  const { isAuthenticated } = useAuth();
+  const {
+    atualizarQuantidade,
+    removerDoCarrinho,
+    adicionarAoCarrinho,
+    quantidadeItens,
+  } = useProduto();
+  const { isAuthenticated, user } = useAuth();
   const router = useRouter();
   const params = useParams();
-  const productId = Number(params.id); 
+  const productId = Number(params.id);
   const [data, setData] = useState<Produto[]>([]);
-  const [quantity, setQuantity] = useState('1');
+  const [quantity, setQuantity] = useState("1");
 
   useEffect(() => {
     getProduto()
@@ -44,17 +63,24 @@ export default function ProductDetails() {
     setQuantity(event.target.value as string);
   };
 
-  const handleAdicionarAoCarrinho = () => {
+  const handleAdicionarAoCarrinho = async () => {
     if (!isAuthenticated) {
       router.push("/login");
-    } else {
+      return;
+    }
+    try {
       const quantidade = Number(quantity);
 
-      for (let i = 0; i < quantidade; i++) {
-        adicionarAoCarrinho(product);
-      }
+      const orderResponse = await getPedidoAberto(user?.id_usuario!);
 
-      alert(`${quantidade} unidade(s) de ${product.descritivo_produto} adicionada(s) ao carrinho!`);
+      await postProdutoEmPedido(user?.id_usuario!, productId, quantidade);
+      alert(
+        `${quantidade} unidade(s) de ${product.descritivo_produto} adicionada(s) ao carrinho!`
+      );
+
+      adicionarAoCarrinho(product);
+    } catch (error) {
+      console.error("Failed to add to cart:", error);
     }
   };
 
@@ -74,7 +100,10 @@ export default function ProductDetails() {
         </span>
       </div>
 
-      <div className={`${styles.content} container_info`} key={product.id_produto}>
+      <div
+        className={`${styles.content} container_info`}
+        key={product.id_produto}
+      >
         <div className={styles.firstRow}>
           <div className={styles.container_imagens}>
             {product.imagens.map((img) => (
@@ -108,9 +137,11 @@ export default function ProductDetails() {
               </p> */}
             </div>
 
-            <Box sx={{ minWidth: 120,  width: "486.43px", }}>
+            <Box sx={{ minWidth: 120, width: "486.43px" }}>
               <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Quantidade: </InputLabel>
+                <InputLabel id="demo-simple-select-label">
+                  Quantidade:{" "}
+                </InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
@@ -124,7 +155,6 @@ export default function ProductDetails() {
                     </MenuItem>
                   ))}
                 </Select>
-
               </FormControl>
             </Box>
 

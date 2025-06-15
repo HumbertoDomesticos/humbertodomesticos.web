@@ -9,15 +9,35 @@ import {
   ShoppingCart,
   User,
 } from "@phosphor-icons/react";
-import { IconButton, InputBase, Paper } from "@mui/material";
+import {
+  Badge,
+  badgeClasses,
+  IconButton,
+  InputBase,
+  Paper,
+  styled,
+} from "@mui/material";
 import Link from "next/link";
-import { useAuth } from '@/app/context/AuthContext';
+import { useAuth } from "@/app/context/AuthContext";
 import { type Usuario, getUsuario } from "@/services/routes/usuarios/page";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useProduto } from "@/app/context/ProdutosContext";
+import { Produto } from "@/services/routes/produtos/page";
+import { getPedidoAberto } from "@/services/routes/pedidos/page";
+
+const CartBadge = styled(Badge)`
+  & .${badgeClasses.badge} {
+    top: -12px;
+    right: -6px;
+  }
+`;
 
 export function HeaderComponent() {
   const { isAuthenticated, user, logout } = useAuth();
+
+  const { carrinho, removerDoCarrinho, limparCarrinho, quantidadeItens } =
+    useProduto();
 
   const [usuario, setUsuario] = useState<Usuario[]>();
 
@@ -25,29 +45,36 @@ export function HeaderComponent() {
 
   const router = useRouter();
 
-  useEffect(() => {
-    const storedEmail = localStorage.getItem("userEmail");
-    if (!storedEmail) {
-      router.replace("/login");
-      return;
-    }
-  }, [router]);
+  const [pedido, setPedido] = useState<Produto[]>([]);
 
   useEffect(() => {
-    getUsuario()
-      .then((resp: Usuario[]) => {
-        setUsuario(resp);
-        const usuarioFiltrado = resp.find(
-          (u) => u.email_usuario === user?.email_usuario
-        );
-        if (usuarioFiltrado) {
-          setUsuarioLogado(usuarioFiltrado);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [user]);
+    if (!user?.id_usuario) {
+      return;
+    }
+
+    const fetchPedidoAberto = async () => {
+      try {
+        const response = await getPedidoAberto(user?.id_usuario!);
+        // Extract products from the order response
+        const produtos = response.data.produtos_em_pedido.map((item) => ({
+          ...item.produto,
+          quantidade: item.quant_produto_em_pedido,
+        }));
+
+        setPedido(produtos);
+      } catch (err) {
+        console.error("Failed to fetch cart:", err);
+      }
+    };
+
+    fetchPedidoAberto();
+  }, [user?.id_usuario, carrinho]);
+
+  let quantidade = 0;
+
+  for (let i = 0; i < pedido.map((e) => e.quantidade).length; i++) {
+    quantidade += i;
+  }
 
   return (
     <div className={styles.content}>
@@ -103,16 +130,21 @@ export function HeaderComponent() {
               color="var(--primary-color)"
               style={{ cursor: "pointer" }}
             />
+            <CartBadge
+              badgeContent={quantidade}
+              color="primary"
+              overlap="circular"
+            />
           </Link>
 
           {isAuthenticated ? (
             <div className={styles.profile}>
               <div className={styles.userInfo}>
-                <p>{usuarioLogado?.nome_usuario || 'Usuário'}</p>
+                <p>{user?.nome_usuario}</p>
               </div>
               <div className={styles.userProfile}>
                 <Link href="/meu-perfil">
-                  <User size={24} color='white' />
+                  <User size={24} color="white" />
                 </Link>
               </div>
             </div>
@@ -126,7 +158,7 @@ export function HeaderComponent() {
               </Link>
               <div className={styles.userProfile}>
                 <Link href="/login">
-                  <User size={24} color='white' />
+                  <User size={24} color="white" />
                 </Link>
               </div>
             </div>

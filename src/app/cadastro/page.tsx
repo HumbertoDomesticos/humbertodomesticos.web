@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Box,
@@ -12,7 +12,7 @@ import {
   OutlinedInput,
   Radio,
   RadioGroup,
-  TextField
+  TextField,
 } from "@mui/material";
 import { HeaderComponentLogin } from "../components/header-component-login";
 import styles from "./styles.module.scss";
@@ -20,56 +20,42 @@ import { Eye, EyeClosed } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { postUsuario, type Usuario } from "@/services/routes/usuarios/page";
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
-import 'dayjs/locale/pt-br';
-dayjs.locale('pt-br');
+import "dayjs/locale/pt-br";
+dayjs.locale("pt-br");
 
-export default function Login() {
+export default function Cadastro() {
   const [showPassword, setShowPassword] = useState(false);
   const [accountType, setAccountType] = useState("Pessoa física");
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
     event.preventDefault();
   };
 
-  const handleMouseUpPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleMouseUpPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
     event.preventDefault();
   };
-
 
   const [nascimento, setNascimento] = useState<Dayjs | null>(null);
 
-
-  // const [usuario, setUsuario] = useState<Usuario>();
-
-  // useEffect(() => {
-  //   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  //   postUsuario().then((resp: any) => {
-  //     setUsuario(resp);
-  //   }).catch((err) => {
-  //     console.log(err);
-  //   })
-  // }, []);
-
   const [formData, setFormData] = useState({
-    email: '',
-    senha: '',
-    nome: '',
-    cpf: '',
-    nascimento: '',
-    cnpj: '',
-    razao: '',
-    fantasia: '',
-    inscricao: '',
-    nomeResponsavel: '',
-    genero_usuario: '',
+    email: "",
+    senha: "",
+    nome: "",
+    cpf: "",
+    nascimento: "",
+    genero_usuario: "",
   });
 
   const handleSubmit = async () => {
@@ -85,7 +71,7 @@ export default function Login() {
     try {
       await postUsuario(usuarioPayload);
     } catch (err) {
-      console.error('Erro ao criar usuário:', err);
+      console.error("Erro ao criar usuário:", err);
     }
   };
 
@@ -100,7 +86,7 @@ export default function Login() {
           <div className={styles.forms}>
             <Box
               component="form"
-              sx={{ '& .MuiTextField-root': { mb: 2 } }}
+              sx={{ "& .MuiTextField-root": { mb: 2 } }}
               noValidate
               autoComplete="off"
               className={styles.input}
@@ -110,110 +96,121 @@ export default function Login() {
                 label="E-mail"
                 variant="outlined"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
               />
 
+              <h1>Dados pessoais</h1>
+              <TextField
+                label="CPF"
+                variant="outlined"
+                value={formData.cpf}
+                onChange={(e) => {
+                  const raw = e.target.value.replace(/\D/g, "");
+                  if (raw.length <= 11) {
+                    const masked = raw
+                      .replace(/^(\d{3})(\d)/, "$1.$2")
+                      .replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3")
+                      .replace(/\.(\d{3})(\d)/, ".$1-$2");
+                    setFormData({ ...formData, cpf: e.target.value });
+                  }
+                }}
+                inputMode="numeric"
+              />
+
+              <TextField
+                id="nome"
+                label="Nome completo"
+                variant="outlined"
+                onChange={(e) =>
+                  setFormData({ ...formData, nome: e.target.value })
+                }
+              />
+
+              <LocalizationProvider
+                dateAdapter={AdapterDayjs}
+                adapterLocale="pt-br"
+              >
+                <DatePicker
+                  label="Data de nascimento"
+                  value={nascimento}
+                  onChange={(newValue) => {
+                    setNascimento(newValue);
+                    setFormData({
+                      ...formData,
+                      nascimento: newValue ? newValue.toISOString() : "",
+                    });
+                  }}
+                  format="DD/MM/YYYY"
+                  slotProps={{
+                    textField: {
+                      variant: "outlined",
+                      fullWidth: true,
+                    },
+                  }}
+                />
+              </LocalizationProvider>
+              {/* <TextField id="nascimento" label="Data de nascimento" variant="outlined" /> */}
+
               <FormControl>
-                <FormLabel id="tipo-conta-label">Tipo de conta</FormLabel>
+                <FormLabel id="genero-usuario-label">Gênero</FormLabel>
                 <RadioGroup
-                  aria-labelledby="tipo-conta-label"
-                  name="tipo-conta"
-                  value={accountType}
-                  onChange={(e) => setAccountType(e.target.value)}
+                  aria-labelledby="genero-usuario-label"
+                  name="genero-usuario"
+                  value={formData.genero_usuario}
+                  onChange={(e) =>
+                    setFormData({ ...formData, genero_usuario: e.target.value })
+                  }
                 >
-                  <FormControlLabel value="Pessoa física" control={<Radio />} label="Pessoa física" />
-                  <FormControlLabel value="Pessoa jurídica" control={<Radio />} label="Pessoa jurídica" />
+                  <FormControlLabel
+                    value="feminino"
+                    control={<Radio />}
+                    label="Feminino"
+                  />
+                  <FormControlLabel
+                    value="masculino"
+                    control={<Radio />}
+                    label="Masculino"
+                  />
+                  <FormControlLabel
+                    value="outro"
+                    control={<Radio />}
+                    label="Outro"
+                  />
                 </RadioGroup>
               </FormControl>
 
-              {accountType === "Pessoa física" ? (
-                <>
-                  <h1>Dados pessoais</h1>
-                  <TextField
-                    label="CPF"
-                    variant="outlined"
-                    value={formData.cpf}
-                    onChange={(e) => {
-                      const raw = e.target.value.replace(/\D/g, '');
-                      if (raw.length <= 11) {
-                        const masked = raw
-                          .replace(/^(\d{3})(\d)/, '$1.$2')
-                          .replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3')
-                          .replace(/\.(\d{3})(\d)/, '.$1-$2');
-                        setFormData({ ...formData, cpf: e.target.value });
-                      }
-                    }}
-                    inputMode="numeric"
-                  />
-
-                  <TextField id="nome" label="Nome completo" variant="outlined" onChange={(e) => setFormData({ ...formData, nome: e.target.value })} />
-
-                  <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
-                    <DatePicker
-                      label="Data de nascimento"
-                      value={nascimento}
-                      onChange={(newValue) => {
-                        setNascimento(newValue);
-                        setFormData({ ...formData, nascimento: newValue ? newValue.toISOString() : '' });
-                      }}
-                      format="DD/MM/YYYY"
-                      slotProps={{
-                        textField: {
-                          variant: 'outlined',
-                          fullWidth: true,
-                        },
-                      }}
-                    />
-                  </LocalizationProvider>
-                  {/* <TextField id="nascimento" label="Data de nascimento" variant="outlined" /> */}
-
-                  <FormControl>
-                    <FormLabel id="genero-usuario-label">Gênero</FormLabel>
-                    <RadioGroup
-                      aria-labelledby="genero-usuario-label"
-                      name="genero-usuario"
-                      value={formData.genero_usuario}
-                      onChange={(e) => setFormData({ ...formData, genero_usuario: e.target.value })}
-                    >
-                      <FormControlLabel value="feminino" control={<Radio />} label="Feminino" />
-                      <FormControlLabel value="masculino" control={<Radio />} label="Masculino" />
-                      <FormControlLabel value="outro" control={<Radio />} label="Outro" />
-                    </RadioGroup>
-                  </FormControl>
-
-                </>
-              ) : (
-                <>
-                  <h1>Dados da empresa</h1>
-                  <TextField id="cnpj" label="CNPJ" variant="outlined" onChange={(e) => setFormData({ ...formData, cnpj: e.target.value })} />
-                  <TextField id="razao" label="Razão social" variant="outlined" onChange={(e) => setFormData({ ...formData, razao: e.target.value })} />
-                  <TextField id="fantasia" label="Nome fantasia" variant="outlined" onChange={(e) => setFormData({ ...formData, fantasia: e.target.value })} />
-                  <TextField id="inscricao" label="Inscrição estadual" variant="outlined" onChange={(e) => setFormData({ ...formData, inscricao: e.target.value })} />
-
-                  <h1>Dados pessoais do responsável</h1>
-                  <TextField id="nome-responsavel" label="Nome completo" variant="outlined" onChange={(e) => setFormData({ ...formData, nomeResponsavel: e.target.value })} />
-                </>
-              )}
-
-              <FormControl sx={{ width: '25ch', marginTop: "15px" }} variant="outlined">
+              <FormControl
+                sx={{ width: "25ch", marginTop: "15px" }}
+                variant="outlined"
+              >
                 <InputLabel htmlFor="senha">Senha</InputLabel>
                 <OutlinedInput
                   id="senha"
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   endAdornment={
                     <InputAdornment position="end">
                       <IconButton
-                        aria-label={showPassword ? 'Esconder senha' : 'Mostrar senha'}
+                        aria-label={
+                          showPassword ? "Esconder senha" : "Mostrar senha"
+                        }
                         onClick={handleClickShowPassword}
                         onMouseDown={handleMouseDownPassword}
                         onMouseUp={handleMouseUpPassword}
                         edge="end"
                       >
-                        {showPassword ? <Eye size={18} /> : <EyeClosed size={18} />}
+                        {showPassword ? (
+                          <Eye size={18} />
+                        ) : (
+                          <EyeClosed size={18} />
+                        )}
                       </IconButton>
                     </InputAdornment>
                   }
-                  onChange={(e) => setFormData({ ...formData, senha: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, senha: e.target.value })
+                  }
                   label="Senha"
                 />
               </FormControl>
@@ -222,9 +219,13 @@ export default function Login() {
             {/* <Link href="/"> */}
             <Button
               variant="contained"
-              sx={{ backgroundColor: "var(--primary-color)", marginTop: "15px", textTransform: "none" }}
+              sx={{
+                backgroundColor: "var(--primary-color)",
+                marginTop: "15px",
+                textTransform: "none",
+              }}
               onClick={handleSubmit}
-              href="/"
+              // href="/"
             >
               Criar conta
             </Button>

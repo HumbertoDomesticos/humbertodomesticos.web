@@ -1,5 +1,15 @@
 "use client";
-import { Typography, Rating, Button, SelectChangeEvent, Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+  Typography,
+  Rating,
+  Button,
+  SelectChangeEvent,
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import { HeaderComponent } from "../../components/header-component";
 import styles from "./styles.module.scss";
 import { House, CaretRight } from "@phosphor-icons/react";
@@ -14,7 +24,11 @@ import { useProduto } from "@/app/context/ProdutosContext";
 import { useRouter } from "next/navigation";
 import router from "next/router";
 import { useAuth } from "@/app/context/AuthContext";
-import { getPedidoAberto, postPedido, postProdutoEmPedido } from "@/services/routes/pedidos/page";
+import {
+  getPedidoAberto,
+  postPedido,
+  postProdutoEmPedido,
+} from "@/services/routes/pedidos/page";
 
 export default function ProductPromoDetails() {
   const { adicionarAoCarrinho, quantidadeItens } = useProduto();
@@ -22,7 +36,7 @@ export default function ProductPromoDetails() {
   const [data, setData] = useState<Produto[]>([]);
   const params = useParams();
   const productId = Number(params.id);
-  const [quantity, setQuantity] = useState('1');
+  const [quantity, setQuantity] = useState("1");
   useEffect(() => {
     getProduto()
       // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -40,9 +54,6 @@ export default function ProductPromoDetails() {
     return <p>Carregando produto...</p>;
   }
 
-  // const router = useRouter();
-
-
   const handleChange = (event: SelectChangeEvent) => {
     setQuantity(event.target.value as string);
   };
@@ -57,19 +68,16 @@ export default function ProductPromoDetails() {
 
       const orderResponse = await getPedidoAberto(user?.id_usuario!);
 
-      await postProdutoEmPedido(
-        user?.id_usuario!,
-        productId,
-        quantidade
+      await postProdutoEmPedido(user?.id_usuario!, productId, quantidade);
+      alert(
+        `${quantidade} unidade(s) de ${product.descritivo_produto} adicionada(s) ao carrinho!`
       );
 
       adicionarAoCarrinho(product);
-
     } catch (error) {
       console.error("Failed to add to cart:", error);
     }
   };
-
 
   return (
     <>
@@ -87,16 +95,14 @@ export default function ProductPromoDetails() {
         </span>
       </div>
 
-      <div className={`${styles.content} container_info`} key={product.id_produto}>
+      <div
+        className={`${styles.content} container_info`}
+        key={product.id_produto}
+      >
         <div className={styles.firstRow}>
           <div className={styles.container_imagens}>
             {product.imagens.map((img) => (
-              <Image
-                src={img.url_img}
-                alt="produto"
-                width={107}
-                height={93}
-              />
+              <Image src={img.url_img} alt="produto" width={107} height={93} />
             ))}
           </div>
           <div className={styles.imagem_principal}>
@@ -111,9 +117,7 @@ export default function ProductPromoDetails() {
             <div className={styles.text}>
               <h1>{product.descritivo_produto}</h1>
               <Rating name="read-only" value={5} readOnly />
-              <p className={styles.preco_original}>
-                De {product.preco}
-              </p>
+              <p className={styles.preco_original}>De {product.preco}</p>
               <div className={styles.preco}>
                 <p className={styles.preco_atual}>
                   Por {product.preco_descontado}
@@ -125,9 +129,11 @@ export default function ProductPromoDetails() {
               </p> */}
             </div>
 
-            <Box sx={{ minWidth: 120, width: "486.43px", }}>
+            <Box sx={{ minWidth: 120, width: "486.43px" }}>
               <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Quantidade: </InputLabel>
+                <InputLabel id="demo-simple-select-label">
+                  Quantidade:{" "}
+                </InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
@@ -141,7 +147,6 @@ export default function ProductPromoDetails() {
                     </MenuItem>
                   ))}
                 </Select>
-
               </FormControl>
             </Box>
 

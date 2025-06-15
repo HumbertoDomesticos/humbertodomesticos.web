@@ -4,7 +4,10 @@ import Link from 'next/link'
 import type { Produto, ProdutoApi } from '@/services/routes/produtos/page'
 
 export function OurProductsComponent({ produtos }: ProdutoApi) {
-    const displayedProducts = produtos.slice(0, 5);
+
+    const produtosSemDesconto = produtos.filter((product) => product.desconto === "Nenhum desconto");
+
+    const displayedProducts = produtosSemDesconto.slice(0, 5);
 
   return (
     <div className={`${styles.section} container_info`}>
