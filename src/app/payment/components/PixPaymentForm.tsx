@@ -19,12 +19,9 @@ export function PixPaymentForm() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          customer: 'cus_000000000000', // ID do cliente na Asaas
-          value: parseFloat(value),
-          dueDate: new Date().toISOString().split('T')[0]
-        })
       })
+
+      console.log(response)
 
       const data = await response.json()
       setQrCode(data.qrCode.encodedImage)

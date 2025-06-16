@@ -1,5 +1,3 @@
-import { env } from '@/env.mjs'
-
 class AsaasClient {
       private apiKey: string
   private baseUrl: string
