@@ -33,7 +33,6 @@ export default function CarrinhoCompras() {
       });
   }, []);
 
-
   useEffect(() => {
     if (!user?.id_usuario) {
       return;
@@ -43,11 +42,11 @@ export default function CarrinhoCompras() {
       try {
         const response = await getPedidoAberto(user?.id_usuario!);
         // Extract products from the order response
-        const produtos = response.data.produtos_em_pedido.map(item => ({
+        const produtos = response.data.produtos_em_pedido.map((item) => ({
           ...item.produto,
-          quantidade: item.quant_produto_em_pedido
+          quantidade: item.quant_produto_em_pedido,
         }));
-        console.log(produtos)
+        console.log(produtos);
         setProdutosCarrinho(produtos);
       } catch (err) {
         console.error("Failed to fetch cart:", err);
@@ -56,7 +55,6 @@ export default function CarrinhoCompras() {
 
     fetchPedidoAberto();
   }, [user?.id_usuario, carrinho]); // Add carrinho as dependency
-
 
   const calcularSubtotal = () => {
     return produtosCarrinho.reduce((total, produto) => {
@@ -73,13 +71,13 @@ export default function CarrinhoCompras() {
     }, 0);
   };
 
-  let quantidade = 0
+  let quantidade = 0;
 
   for (let i = 0; i < produtosCarrinho.map((e) => e.quantidade).length; i++) {
-    quantidade += i
+    quantidade += i;
   }
 
-  produtosCarrinho.map((e) => e.quantidade)
+  produtosCarrinho.map((e) => e.quantidade);
 
   const subtotal = calcularSubtotal();
   const frete = 0; // pode ser alterado no futuro

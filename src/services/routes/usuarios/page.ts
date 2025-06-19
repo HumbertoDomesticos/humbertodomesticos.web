@@ -1,11 +1,13 @@
 import type { AxiosResponse } from "axios";
 import axios from "axios";
 
+export type UF =
+  'ac'| 'al'| 'ap'| 'am'| 'ba'| 'ce'| 'es'| 'go'| 'df'| 'ma'| 'mt'| 'ms'| 'mg'| 'pa'| 'pb'| 'pr'| 'pe'| 'pi'| 'rj'| 'rn'| 'rs'| 'ro'| 'rr'| 'sc'| 'sp'| 'se' | 'to'
 
 export type Usuario = {
   id_usuario?: number;
   nome_usuario: string;
-  cpf: string;
+  cpf_usuario: string;
   genero_usuario: string,
   email_usuario: string;
   senha_usuario_temp: string;
@@ -20,7 +22,7 @@ export interface IUserAddress {
   bairro_endereco: string,
   cidade_endereco: string,
   descricao_endereco: string,
-  uf_endereco: string,
+  uf_endereco: UF,
 }
 
 export async function getUsuario(): Promise<AxiosResponse> {

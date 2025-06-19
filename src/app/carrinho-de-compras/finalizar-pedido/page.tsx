@@ -18,12 +18,13 @@ import { useAuth } from "@/app/context/AuthContext";
 import {
   getPedidoAberto,
   postFecharPedido,
+  PutQuantidade,
 } from "@/services/routes/pedidos/page";
-import BasicModal from "@/app/components/add-adress/page";
 import { Produto } from "@/services/routes/produtos/page";
 import { loadStripe } from "@stripe/stripe-js";
-import { POST } from '@/app/api/asaas/pix/route';
+import { POST } from "@/app/api/asaas/pix/route";
 import axios from "axios";
+import { BasicModal } from "@/app/components/add-adress/page";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -69,10 +70,14 @@ export default function FinalizarPedido() {
     useProduto();
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [pixPayload, setPixPayload] = useState('');
-  const [pixUrl, setPixUrl] = useState('');
+  const [pixPayload, setPixPayload] = useState("");
+  const [pixUrl, setPixUrl] = useState("");
 
   const [pedido, setPedido] = useState<Produto[]>([]);
+  const [showPagamento, setShowPagamento] = useState(false);
+
+  const handleOpenSetAddress = () => setAddAddress(true);
+  const handleCloseSetAddress = () => setAddAddress(false);
 
   useEffect(() => {
     if (!user?.id_usuario) {
@@ -98,13 +103,14 @@ export default function FinalizarPedido() {
 
   const calcularSubtotal = () => {
     return pedido.reduce((total, produto) => {
-      const preco = Number(
-        produto.preco_descontado
-          ?.toString()
-          .replace("R$", "")
-          .replace(",", ".")
-          .trim()
-      ) || 0;
+      const preco =
+        Number(
+          produto.preco_descontado
+            ?.toString()
+            .replace("R$", "")
+            .replace(",", ".")
+            .trim()
+        ) || 0;
 
       const quantidade = produto.quantidade || 1;
       return total + preco * quantidade;
@@ -128,22 +134,23 @@ export default function FinalizarPedido() {
 
   const gerarPix = async () => {
     try {
-      const response = await fetch('/api/asaas/pix', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/asaas/pix", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: user?.nome_usuario,
           email: user?.email_usuario,
-          cpfCnpj: user?.cpf,
+          cpfCnpj: user?.cpf_usuario,
           value: 2000,
           // value: subtotal,
         }),
-      })
-
+      });
 
       console.log("Resposta do fetch:", response.status, response.statusText);
 
       const data = await response.json();
+
+      console.log(data.qrCode);
 
       if (data.qrCode) {
         setPixPayload(data.qrCode.pixCopyPaste);
@@ -154,6 +161,11 @@ export default function FinalizarPedido() {
     } catch (error) {
       console.error("Erro ao chamar API do PIX:", error);
     }
+  };
+
+  const handleFecharPedido = async () => {
+    await postFecharPedido(user?.id_usuario!, "pix");
+    setShowPagamento(true);
   };
 
   return (
@@ -188,7 +200,7 @@ export default function FinalizarPedido() {
                 boxShadow: "none",
                 textTransform: "none",
               }}
-              onClick={() => setAddAddress(true)}
+              onClick={handleOpenSetAddress}
             >
               Adicionar endereço
             </Button>
@@ -197,7 +209,7 @@ export default function FinalizarPedido() {
           )}
         </div>
 
-        {addAddress && <BasicModal />}
+        {addAddress && <BasicModal handleClose={handleCloseSetAddress} />}
 
         <div className={styles.section}>
           <h1>Produtos pedidos</h1>
@@ -212,72 +224,86 @@ export default function FinalizarPedido() {
             <span>Total</span>
             <span>R${subtotal}</span>
           </div>
-        </div>
 
-        <div className={styles.section}>
-          <h1>Método de pagamento</h1>
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              aria-label="basic tabs example"
-            >
-              <Tab label="Pix" {...a11yProps(0)} />
-              <Tab label="Transferência bancária" {...a11yProps(1)} />
-            </Tabs>
-          </Box>
-          <CustomTabPanel value={value} index={0}>
-            <section>
-              <Button
-                variant="contained"
-                type="submit"
-                role="link"
-                onClick={gerarPix}
-                sx={{
-                  backgroundColor: "var(--primary-color)",
-                  boxShadow: "none",
-                  textTransform: "none",
-                }}
-              >
-                Pix
-              </Button>
-            </section>
-            
-            {pixPayload && pixUrl && (
-              <div className="mt-4 text-center">
-                <img
-                  src={`data:image/png;base64,${pixUrl}`}
-                  alt="QR Code PIX"
-                  style={{ maxWidth: 200, margin: '0 auto' }}
-                />
-                <p className="mt-2 text-sm">Escaneie o QR Code com seu app bancário</p>
-                <span>{pixPayload}</span>
-              </div>
-            )}
-          </CustomTabPanel>
-
-
-
-          <CustomTabPanel value={value} index={1}>
+          <div>
             <Button
               variant="contained"
               type="submit"
               role="link"
+              onClick={handleFecharPedido}
               sx={{
                 backgroundColor: "var(--primary-color)",
                 boxShadow: "none",
                 textTransform: "none",
               }}
             >
-              Transferência bancária
+              Fazer pedido
             </Button>
-          </CustomTabPanel>
-
-
+          </div>
         </div>
+
+        {showPagamento && (
+          <div className={styles.section}>
+            <h1>Método de pagamento</h1>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                aria-label="basic tabs example"
+              >
+                <Tab label="Pix" {...a11yProps(0)} />
+                <Tab label="Transferência bancária" {...a11yProps(1)} />
+              </Tabs>
+            </Box>
+            <CustomTabPanel value={value} index={0}>
+              <section>
+                <Button
+                  variant="contained"
+                  type="submit"
+                  role="link"
+                  onClick={gerarPix}
+                  sx={{
+                    backgroundColor: "var(--primary-color)",
+                    boxShadow: "none",
+                    textTransform: "none",
+                  }}
+                >
+                  Pix
+                </Button>
+              </section>
+
+              {pixPayload && pixUrl && (
+                <div className="mt-4 text-center">
+                  <img
+                    src={`data:image/png;base64,${pixUrl}`}
+                    alt="QR Code PIX"
+                    style={{ maxWidth: 200, margin: "0 auto" }}
+                  />
+                  <p className="mt-2 text-sm">
+                    Escaneie o QR Code com seu app bancário
+                  </p>
+                  <span>{pixPayload}</span>
+                </div>
+              )}
+            </CustomTabPanel>
+
+            <CustomTabPanel value={value} index={1}>
+              <Button
+                variant="contained"
+                type="submit"
+                role="link"
+                sx={{
+                  backgroundColor: "var(--primary-color)",
+                  boxShadow: "none",
+                  textTransform: "none",
+                }}
+              >
+                Transferência bancária
+              </Button>
+            </CustomTabPanel>
+          </div>
+        )}
       </div>
     </div>
   );
 }
-
-

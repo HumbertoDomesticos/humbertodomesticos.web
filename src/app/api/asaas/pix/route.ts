@@ -71,8 +71,19 @@ export async function POST(req: NextRequest) {
       pagamentoId,
     });
 
-  } catch (error: any) {
-    console.error(error.response?.data || error.message);
-    return NextResponse.json({ error: 'Erro ao gerar PIX' }, { status: 500 });
+ } catch (error: any) {
+  console.error("Erro completo ao gerar PIX:");
+  if (axios.isAxiosError(error)) {
+    console.error("Axios Error:", error.toJSON?.());
+    console.error("Axios Response:", error.response?.data);
+  } else {
+    console.error("Erro desconhecido:", error);
   }
+
+  return NextResponse.json(
+    { error: 'Erro ao gerar PIX', details: error.response?.data || error.message },
+    { status: 500 }
+  );
+}
+
 }

@@ -56,7 +56,7 @@ export async function postProdutoEmPedido(
 
 export async function postFecharPedido(
   idUsuario: number,
-  tipoPagamento: "pix" | "cartao" | "boleto"
+  tipoPagamento: "pix"
 ): Promise<AxiosResponse<IPedidos>> {
   try {
     return await axios.post<IPedidos>(

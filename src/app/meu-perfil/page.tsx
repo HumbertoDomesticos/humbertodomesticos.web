@@ -124,7 +124,7 @@ export default function Perfil() {
                 </div>
 
                 <div className={styles.flex}>
-                  <p>{usuarioLogado?.cpf}</p>
+                  <p>{usuarioLogado?.cpf_usuario}</p>
                   <PencilSimpleLine size={16} />
                 </div>
               </div>

@@ -62,7 +62,7 @@ export default function Cadastro() {
     const usuarioPayload: Usuario = {
       nome_usuario: formData.nome,
       email_usuario: formData.email,
-      cpf: formData.cpf,
+      cpf_usuario: formData.cpf,
       senha_usuario_temp: formData.senha,
       genero_usuario: formData.genero_usuario,
       // data_nasc_usuario: nascimento?.startOf('day').toISOString().split('T')[0] ?? '',
@@ -74,6 +74,8 @@ export default function Cadastro() {
       console.error("Erro ao criar usuário:", err);
     }
   };
+
+  console.log(formData.cpf);
 
   return (
     <div>
@@ -107,14 +109,7 @@ export default function Cadastro() {
                 variant="outlined"
                 value={formData.cpf}
                 onChange={(e) => {
-                  const raw = e.target.value.replace(/\D/g, "");
-                  if (raw.length <= 11) {
-                    const masked = raw
-                      .replace(/^(\d{3})(\d)/, "$1.$2")
-                      .replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3")
-                      .replace(/\.(\d{3})(\d)/, ".$1-$2");
-                    setFormData({ ...formData, cpf: e.target.value });
-                  }
+                  setFormData({ ...formData, cpf: e.target.value });
                 }}
                 inputMode="numeric"
               />
