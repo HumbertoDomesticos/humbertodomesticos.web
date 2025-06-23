@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
 
     // 2. Criar cobrança PIX
     const pagamento = await axios.post(
-      `https://api-sandbox.asaas.com/v3/payments`,
+      `https://api-sandbox.asaas.com/v3/lean/payments`,
       {
         customer: customer.id,
         billingType: 'PIX',
@@ -50,7 +50,28 @@ export async function POST(req: NextRequest) {
         },
       }
     );
+
+    console.log("pagamento: ", pagamento)
     const pagamentoId = pagamento.data.id;
+
+    // const qrCode
+    const qrCodeEstatico = await axios.post(
+      `https://api-sandbox.asaas.com/v3/pix/qrCodes/static`,
+      {
+        addressKey: "06559674940",
+        value: value,
+        format: "All",
+      },
+      {
+        headers: {
+          access_token: process.env.ASAAS_API_KEY!,
+        },
+      }
+    );
+
+    console.log("qrCodeEstatico: ", qrCodeEstatico.data)
+    // const pagamentoId = pagamento.data.id;
+
 
     // Agora busque o QR Code (feito pelo servidor, sem CORS)
     const qrCodeResponse = await axios.get(
@@ -65,25 +86,40 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       qrCode: {
-        pixCopyPaste: qrCodeResponse.data.payload,
-        pixQrCode: qrCodeResponse.data.encodedImage,
+        pixCopyPaste: qrCodeEstatico.data.payload,
+        pixQrCode: qrCodeEstatico.data.encodedImage,
       },
       pagamentoId,
     });
 
- } catch (error: any) {
-  console.error("Erro completo ao gerar PIX:");
-  if (axios.isAxiosError(error)) {
-    console.error("Axios Error:", error.toJSON?.());
-    console.error("Axios Response:", error.response?.data);
-  } else {
-    console.error("Erro desconhecido:", error);
+  } catch (error: any) {
+    console.error("Erro completo ao gerar PIX:");
+    if (axios.isAxiosError(error)) {
+      console.error("Axios Error:", error.toJSON?.());
+      console.error("Axios Response:", error.response?.data);
+    } else {
+      console.error("Erro desconhecido:", error);
+    }
+
+    return NextResponse.json(
+      { error: 'Erro ao gerar PIX', details: error.response?.data || error.message },
+      { status: 500 }
+    );
   }
 
-  return NextResponse.json(
-    { error: 'Erro ao gerar PIX', details: error.response?.data || error.message },
-    { status: 500 }
-  );
 }
+
+export async function GET(request: NextRequest) {
+    const listarPix = await axios.get('https://api-sandbox.asaas.com/v3/lean/payments',
+    {
+      headers: {
+        access_token: process.env.ASAAS_API_KEY!,
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      }
+    },
+  );
+
+  return NextResponse.json(listarPix.data);
 
 }

@@ -1,5 +1,7 @@
+import { ProdutoVM } from "@/viewmodel/produto_vm";
 import type { AxiosResponse } from "axios";
 import axios from "axios";
+import { randomUUID } from "crypto";
 
 export interface ProdutoApi {
   produtos: Produto[];
@@ -20,6 +22,16 @@ export interface Produto {
   preco_descontado: string;
   imagens: IImage[];
 }
+
+// function mapProdutoToProdutoVM(produto: Produto): ProdutoVM {
+//   return {
+//     id: produto.id,
+//     nome: produto.nome,
+//     precoFormatado: `R$ ${produto.preco.toFixed(2).replace('.', ',')}`,
+//     emEstoque: produto.estoque > 0,
+//     categoria: produto.categoria,
+//   };
+// }
 
 export async function getProduto(): Promise<AxiosResponse> {
   try {

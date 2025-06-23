@@ -6,6 +6,7 @@ import { getPedidoAberto, PutQuantidade } from "@/services/routes/pedidos/page";
 import { useAuth } from "@/app/context/AuthContext";
 import { IPedidos } from "@/services/routes/pedidos/page";
 import react from "react";
+import { ProdutoVM } from "@/viewmodel/produto_vm";
 
 interface ProdutoParaComprarProps {
   isBuying: boolean;
@@ -39,7 +40,7 @@ export default function ProdutoParaComprar({
           ...item.produto,
           quantidade: item.quant_produto_em_pedido,
         }));
-        console.log(produtos);
+        
         setProdutosCarrinho(produtos);
       } catch (err) {
         console.error("Failed to fetch cart:", err);
@@ -67,7 +68,16 @@ export default function ProdutoParaComprar({
       await PutQuantidade(user?.id_usuario!, produtoId, novaQuantidade);
       atualizarQuantidade(produtoId, novaQuantidade);
       setQuantidades((prev) => ({ ...prev, [produtoId]: novaQuantidade }));
+      setProdutosCarrinho((prev) =>
+        prev.map((p) =>
+          p.id_produto === produtoId ? { ...p, quantidade: novaQuantidade } : p
+        )
+      );
+
+      
+
     }
+    console.log("aoba ", produtoId);
   };
 
   const handleDecrement = async (
@@ -80,6 +90,14 @@ export default function ProdutoParaComprar({
       await PutQuantidade(user?.id_usuario!, produtoId, novaQuantidade);
       atualizarQuantidade(produtoId, novaQuantidade);
       setQuantidades((prev) => ({ ...prev, [produtoId]: novaQuantidade }));
+      setProdutosCarrinho((prev) => {
+
+        return prev.map((p) =>
+          
+          p.id_produto === produtoId ? { ...p, quantidade: novaQuantidade } : p
+        )}
+      );
+
     } else {
       await PutQuantidade(user?.id_usuario!, produtoId, 0);
       removerDoCarrinho(produtoId);
@@ -128,25 +146,35 @@ export default function ProdutoParaComprar({
                   </button>
                   <input
                     type="number"
-                    value={
-                      quantidades[produto.id_produto] ?? produto.quantidade
+                    value={quantidades[produto.id_produto] !== undefined
+                      ? quantidades[produto.id_produto]
+                      : produto.quantidade
                     }
                     onChange={(e) => {
-                      const novaQuantidade = Math.max(
-                        1,
-                        Number(e.target.value)
-                      );
-                      handleInputChange(produto.id_produto, novaQuantidade);
+                      const raw = e.target.value;
+                      const parsed = parseInt(raw, 10);
+
+                      if (!isNaN(parsed)) {
+                        handleInputChange(produto.id_produto, parsed);
+                      } else {
+                        handleInputChange(produto.id_produto, 0);
+                      }
                     }}
-                    onBlur={() => {
+
+
+                    onBlur={async () => {
                       const quantidadeFinal =
                         quantidades[produto.id_produto] ?? produto.quantidade;
                       const safeQuantity = Math.min(
-                        Math.max(1, quantidadeFinal),
+                        Math.max(0, quantidadeFinal),
                         produto.estoque_produto
                       );
 
-                      if (safeQuantity !== produto.quantidade) {
+                      if (safeQuantity === 0) {
+                        await PutQuantidade(user?.id_usuario!, produto.id_produto, 0);
+                        removerDoCarrinho(produto.id_produto);
+                      } else if (safeQuantity !== produto.quantidade) {
+                        await PutQuantidade(user?.id_usuario!, produto.id_produto, safeQuantity);
                         atualizarQuantidade(produto.id_produto, safeQuantity);
                       }
 
@@ -155,10 +183,10 @@ export default function ProdutoParaComprar({
                         delete novo[produto.id_produto];
                         return novo;
                       });
+                      
                     }}
-                    min={1}
-                    max={produto.estoque_produto}
-                  />
+                  ></input>
+
 
                   <button
                     type="button"
@@ -184,10 +212,18 @@ export default function ProdutoParaComprar({
             </div>
             <span
               className={styles.excluir}
-              onClick={() => removerDoCarrinho(produto.id_produto)}
+              style={{ cursor: "pointer" }}
+              onClick={async () => {
+                await PutQuantidade(user?.id_usuario!, produto.id_produto, 0);
+                removerDoCarrinho(produto.id_produto);
+                setProdutosCarrinho((prev) =>
+                  prev.filter((p) => p.id_produto !== produto.id_produto)
+                );
+              }}
             >
               Excluir
             </span>
+
           </div>
         </div>
       ))}

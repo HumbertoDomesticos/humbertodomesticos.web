@@ -46,7 +46,7 @@ export default function CarrinhoCompras() {
           ...item.produto,
           quantidade: item.quant_produto_em_pedido,
         }));
-        console.log(produtos);
+        // console.log(produtos);
         setProdutosCarrinho(produtos);
       } catch (err) {
         console.error("Failed to fetch cart:", err);
@@ -71,13 +71,7 @@ export default function CarrinhoCompras() {
     }, 0);
   };
 
-  let quantidade = 0;
-
-  for (let i = 0; i < produtosCarrinho.map((e) => e.quantidade).length; i++) {
-    quantidade += i;
-  }
-
-  produtosCarrinho.map((e) => e.quantidade);
+  let quantidade = produtosCarrinho.map((e) => e.quantidade);
 
   const subtotal = calcularSubtotal();
   const frete = 0; // pode ser alterado no futuro
@@ -89,9 +83,9 @@ export default function CarrinhoCompras() {
 
       <div className={`${styles.route} container_info`}>
         <span>
-          <a href="/">
+          <Link href="/">
             <House size={20} />
-          </a>
+          </Link>
           <p>
             <CaretRight size={14} />
             Meu carrinho
@@ -124,7 +118,6 @@ export default function CarrinhoCompras() {
           <div className={`${styles.contentCarrinho} container_info`}>
             <div className={styles.containerCarrinho}>
               <h1>Seus produtos</h1>
-
               <ProdutoParaComprar isBuying={false} />
             </div>
 

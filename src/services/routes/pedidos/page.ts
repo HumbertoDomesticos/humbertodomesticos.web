@@ -96,7 +96,7 @@ export async function PutQuantidade(
 ): Promise<Produto> {
   try {
     const response = await axios.post(
-      `http://127.0.0.1:8000/pedidos/${idUsuario}/add-produto/${idProduto}/${quantidade}`
+      `http://127.0.0.1:8000/pedidos/${idUsuario}/alt-quant/${idProduto}/${quantidade}`
     );
     return response.data;
   } catch (error) {

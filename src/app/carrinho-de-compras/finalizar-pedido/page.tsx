@@ -13,7 +13,7 @@ import { Button } from "@mui/material";
 import ProdutoParaComprar from "@/app/components/buying-product-component/page";
 // import { useAuth } from "@/app/context/AuthContext";
 import { useProduto } from "@/app/context/ProdutosContext";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useAuth } from "@/app/context/AuthContext";
 import {
   getPedidoAberto,
@@ -24,7 +24,9 @@ import { Produto } from "@/services/routes/produtos/page";
 import { loadStripe } from "@stripe/stripe-js";
 import { POST } from "@/app/api/asaas/pix/route";
 import axios from "axios";
-import { BasicModal } from "@/app/components/add-adress/page";
+import { AddressInputs } from "@/app/components/add-address/page";
+import { ShowPix } from "@/app/components/show-pix";
+import { ShowBankTransfer } from "@/app/components/show-bank-transfer";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -63,21 +65,35 @@ export default function FinalizarPedido() {
   const [value, setValue] = useState(0);
 
   const [addAddress, setAddAddress] = useState(false);
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
   const { carrinho, removerDoCarrinho, limparCarrinho, quantidadeItens } =
     useProduto();
+
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
+
   const [pixPayload, setPixPayload] = useState("");
   const [pixUrl, setPixUrl] = useState("");
+  const [pixModal, setPixModal] = useState(false)
+  const [bankTransferModal, setBankTransferModal] = useState(false)
 
   const [pedido, setPedido] = useState<Produto[]>([]);
   const [showPagamento, setShowPagamento] = useState(false);
 
   const handleOpenSetAddress = () => setAddAddress(true);
   const handleCloseSetAddress = () => setAddAddress(false);
+
+  const handleOpenSetBankTransferModal = () => setBankTransferModal(true);
+  const handleCloseSetBankTransferModal = () => setBankTransferModal(false);
+
+  const handleClosePix = () => {
+    setPixModal(false);
+    redirect('/')
+  }
 
   useEffect(() => {
     if (!user?.id_usuario) {
@@ -117,13 +133,7 @@ export default function FinalizarPedido() {
     }, 0);
   };
 
-  let quantidade = 0;
-
-  for (let i = 0; i < pedido.map((e) => e.quantidade).length; i++) {
-    quantidade += i;
-  }
-
-  pedido.map((e) => e.quantidade);
+  let quantidade = pedido.map((e) => e.quantidade);
 
   const subtotal = calcularSubtotal();
 
@@ -140,9 +150,9 @@ export default function FinalizarPedido() {
         body: JSON.stringify({
           name: user?.nome_usuario,
           email: user?.email_usuario,
-          cpfCnpj: user?.cpf_usuario,
-          value: 2000,
-          // value: subtotal,
+          cpfCnpj: user?.cpf,
+          // value: 2000,
+          value: subtotal,
         }),
       });
 
@@ -158,6 +168,9 @@ export default function FinalizarPedido() {
       } else {
         console.error("Erro ao gerar QR Code PIX", data);
       }
+
+      setPixModal(true);
+
     } catch (error) {
       console.error("Erro ao chamar API do PIX:", error);
     }
@@ -189,6 +202,7 @@ export default function FinalizarPedido() {
         </span>
       </div>
 
+
       <div className={`${styles.content} container_info`}>
         <div className={styles.section}>
           <h1>Endereço de entrega</h1>
@@ -209,7 +223,7 @@ export default function FinalizarPedido() {
           )}
         </div>
 
-        {addAddress && <BasicModal handleClose={handleCloseSetAddress} />}
+        {addAddress && <AddressInputs handleClose={handleCloseSetAddress} />}
 
         <div className={styles.section}>
           <h1>Produtos pedidos</h1>
@@ -272,18 +286,8 @@ export default function FinalizarPedido() {
                 </Button>
               </section>
 
-              {pixPayload && pixUrl && (
-                <div className="mt-4 text-center">
-                  <img
-                    src={`data:image/png;base64,${pixUrl}`}
-                    alt="QR Code PIX"
-                    style={{ maxWidth: 200, margin: "0 auto" }}
-                  />
-                  <p className="mt-2 text-sm">
-                    Escaneie o QR Code com seu app bancário
-                  </p>
-                  <span>{pixPayload}</span>
-                </div>
+              {pixModal && pixPayload && pixUrl && (
+                <ShowPix handleClose={handleClosePix} pixUrl={pixUrl} pixPayload={pixPayload} />
               )}
             </CustomTabPanel>
 
@@ -297,9 +301,12 @@ export default function FinalizarPedido() {
                   boxShadow: "none",
                   textTransform: "none",
                 }}
+                onClick={handleOpenSetBankTransferModal}
               >
                 Transferência bancária
               </Button>
+
+              {bankTransferModal && <ShowBankTransfer handleClose={handleOpenSetBankTransferModal} subtotal={subtotal} />}
             </CustomTabPanel>
           </div>
         )}
