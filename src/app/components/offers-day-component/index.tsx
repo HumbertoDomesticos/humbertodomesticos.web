@@ -46,12 +46,13 @@ export function OffersDayComponent({ produtos }: ProdutoApi) {
               passHref
             >
               <ProductCardPromo
+                key={product.id_produto}
                 name={product.descritivo_produto}
                 price={product.preco_descontado}
                 oldPrice={product.preco}
                 promo={product.desconto}
                 image={product.imagens}
-                // image.map((i) => i.path_image[0])
+              // image.map((i) => i.path_image[0])
               />
             </Link>
           ))}

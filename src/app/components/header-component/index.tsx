@@ -25,6 +25,7 @@ import { useState, useEffect } from "react";
 import { useProduto } from "@/app/context/ProdutosContext";
 import { Produto } from "@/services/routes/produtos/page";
 import { getPedidoAberto } from "@/services/routes/pedidos/page";
+import { AddressInputs } from "../add-address/page";
 
 const CartBadge = styled(Badge)`
   & .${badgeClasses.badge} {
@@ -46,6 +47,10 @@ export function HeaderComponent() {
   const router = useRouter();
 
   const [pedido, setPedido] = useState<Produto[]>([]);
+
+  const [showAddress, setShowAddress] = useState(false)
+  const handleOpenAddress = () => setShowAddress(true)
+  const handleCloseAddress = () => setShowAddress(false)
 
   useEffect(() => {
     if (!user?.id_usuario) {
@@ -72,8 +77,12 @@ export function HeaderComponent() {
 
   let quantidade = 0;
 
-  for (let i = 0; i < pedido.map((e) => e.quantidade).length; i++) {
-    quantidade += i;
+  let qtdApi = pedido.map((p) => p.quantidade)
+
+  for (let i = 0; i < qtdApi.length; i++) {
+    quantidade += qtdApi[i];
+    console.log(i)
+    console.log(quantidade)
   }
 
   return (
@@ -97,7 +106,7 @@ export function HeaderComponent() {
             sx={{
               display: "flex",
               alignItems: "center",
-              width: 550,
+              width: 580,
               borderRadius: "8px",
             }}
           >
@@ -118,11 +127,11 @@ export function HeaderComponent() {
         </div>
 
         <div className={styles.icons}>
-          <Heart
+          {/* <Heart
             size={24}
             color="var(--primary-color)"
             style={{ cursor: "pointer" }}
-          />
+          /> */}
 
           <Link href="/carrinho-de-compras">
             <ShoppingCart
@@ -130,11 +139,16 @@ export function HeaderComponent() {
               color="var(--primary-color)"
               style={{ cursor: "pointer" }}
             />
-            <CartBadge
-              badgeContent={quantidade}
-              color="primary"
-              overlap="circular"
-            />
+
+            {pedido.map((p) => p.quantidade > 0 && (
+              <CartBadge
+                key={p.id_produto}
+                badgeContent={quantidade}
+                color="primary"
+                overlap="circular"
+              />
+
+            ))}
           </Link>
 
           {isAuthenticated ? (
@@ -170,15 +184,18 @@ export function HeaderComponent() {
       <div className={styles.secondRow}>
         <div className={styles.location}>
           <MapPin size={20} color="var(--primary-color)" />
-          <p>
+          <p onClick={handleOpenAddress} style={{cursor: "pointer"}}>
             Informe seu <span>CEP</span>
           </p>
+
+          {showAddress && <AddressInputs handleClose={handleCloseAddress} />}
         </div>
 
         <div className={styles.menu}>
           <Link href="/quem-somos">Sobre nós</Link>
+          <Link href="/quem-somos">Categorias</Link>
           <Link href="/#ofertas-dia">Ofertas do dia</Link>
-          <Link href="/#mais-vendidos">Mais vendidos</Link>
+          <Link href="/#mais-vendidos">Nossos Produtos</Link>
           <Link href="/#fique-dentro">Fique por dentro</Link>
         </div>
       </div>

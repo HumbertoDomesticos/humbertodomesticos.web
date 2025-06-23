@@ -1,3 +1,4 @@
+import Link from "next/link";
 import styles from "./styles.module.scss";
 import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from "react-icons/fa";
 
@@ -39,10 +40,10 @@ export function FooterComponent() {
         <div className={styles.footerColumn}>
           <h4>Siga-nos</h4>
           <div className={styles.socialIcons}>
-            <a href="#"><FaFacebookF /></a>
-            <a href="#"><FaTwitter /></a>
-            <a href="#"><FaInstagram /></a>
-            <a href="#"><FaLinkedinIn /></a>
+            <Link href="#"><FaFacebookF /></Link>
+            <Link href="#"><FaTwitter /></Link>
+            <Link href="#"><FaInstagram /></Link>
+            <Link href="#"><FaLinkedinIn /></Link>
           </div>
         </div>
       </div>

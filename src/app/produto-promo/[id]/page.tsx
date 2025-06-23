@@ -101,8 +101,8 @@ export default function ProductPromoDetails() {
       >
         <div className={styles.firstRow}>
           <div className={styles.container_imagens}>
-            {product.imagens.map((img) => (
-              <Image src={img.url_img} alt="produto" width={107} height={93} />
+            {product.imagens.map((img, index) => (
+              <Image src={img.url_img} alt="produto" width={107} height={93} key={index}/>
             ))}
           </div>
           <div className={styles.imagem_principal}>
@@ -151,7 +151,7 @@ export default function ProductPromoDetails() {
             </Box>
 
             <div>
-              <p className={styles.estoque}>Em estoque</p>
+              <p className={styles.estoque}><strong>Em estoque</strong></p>
               <p className={styles.estoque}>
                 {product.estoque_produto} unidades restantes
               </p>
@@ -160,7 +160,6 @@ export default function ProductPromoDetails() {
               <Link href="/">
                 <Button
                   variant="contained"
-                  href="/"
                   sx={{
                     backgroundColor: "var(--secondary-color)",
                     width: "486.43px",

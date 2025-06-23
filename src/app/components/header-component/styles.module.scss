@@ -23,10 +23,15 @@
         padding-right: 16px;
         width: 100%;
 
+        .logoInput {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
 
         .icons {
             display: flex;
-            gap: 15px;
+            gap: 25px;
             align-items: anchor-center;
         }
 
@@ -49,16 +54,12 @@
 
     .secondRow {
         display: flex;
-        gap: 45px;
-        align-items: anchor-center;
-        // justify-content: space-between;
-        padding: 0 20px 10px 20px;
-        margin-bottom: 10px;
+        gap: 125px;
+        padding-left: 55px;
+        padding-bottom: 10px;
         max-width: 1280px;
-        margin-left: auto;
-        margin-right: auto;
-        padding-left: 16px;
-        padding-right: 16px;
+        justify-self: center;
+        justify-content: start;
         width: 100%;
 
         span {
@@ -75,8 +76,9 @@
             display: flex;
             gap: 20px;
             cursor: pointer;
+            justify-content: center;
 
-            p:hover {
+            a:hover {
                 color: var(--primary-color);
                 transition: 0.6s;
             }

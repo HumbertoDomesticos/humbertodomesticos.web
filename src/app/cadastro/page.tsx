@@ -27,6 +27,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
+import { redirect, useRouter } from "next/navigation";
 dayjs.locale("pt-br");
 
 export default function Cadastro() {
@@ -58,6 +59,9 @@ export default function Cadastro() {
     genero_usuario: "",
   });
 
+  const router = useRouter();
+
+
   const handleSubmit = async () => {
     const usuarioPayload: Usuario = {
       nome_usuario: formData.nome,
@@ -70,6 +74,7 @@ export default function Cadastro() {
 
     try {
       await postUsuario(usuarioPayload);
+      router.push('/login');
     } catch (err) {
       console.error("Erro ao criar usuário:", err);
     }
@@ -220,7 +225,7 @@ export default function Cadastro() {
                 textTransform: "none",
               }}
               onClick={handleSubmit}
-              // href="/"
+            // href="/"
             >
               Criar conta
             </Button>
