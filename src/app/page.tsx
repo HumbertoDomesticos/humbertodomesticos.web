@@ -13,6 +13,7 @@ import { StayInsideComponent } from "./components/stay-inside-component";
 import type { AxiosResponse } from "axios";
 import { useEffect, useMemo, useState } from "react";
 import { type Produto, getProduto } from "@/services/routes/produtos/page";
+import { ArrowCircleDown } from "@phosphor-icons/react";
 
 export default function Home() {
   const [data, setData] = useState<Produto[]>([]);
@@ -32,23 +33,43 @@ export default function Home() {
 
       <HeaderComponent />
 
+      <div className={styles.content}>
+        <div className={`${styles.introdution} container_info`} style={{ marginTop: "40px" }}>
+          <div>
+            <Image src={"/banners/banner1.jpg"} alt={""} width={640} height={340} style={{ borderRadius: "8px" }} />
+          </div>
+          <div>
+            <span>Humberto Domésticos</span>
+            <p>
+              ⚡ Chegou o <strong>Humberto Domésticos</strong>! O marketplace que vai revolucionar sua forma de comprar eletrodomésticos.
+              <br />
+               Não compre antes de conhecer o <strong>futuro da sua casa!</strong>
+            </p>
 
-      <OffersDayComponent produtos={data} />
-
-      <BestSelledComponent produtos={data} />
-
-      <OurProductsComponent produtos={data} />
-
-      <StayInsideComponent />
-
-      {/* <div className={`${styles.section} container_info`}>
-        <h1 className={styles.title}>Categorias</h1>
-        <div className={styles.cardCategories}>
-          {categoriesList.map((category) => (
-            <Categories key={category.id} category={category.category} image={category.image} />
-          ))}
+            <div style={{ display: "flex" }}>
+              <span className={styles.spanTeste}>Conheça mais sobre nossos produtos abaixo.   <ArrowCircleDown size={26} color={"var(--primary-color)"} /></span>          </div>
+          </div>
         </div>
-      </div> */}
+
+        <div className={`${styles.section} container_info`}>
+          {/* <h1 className={styles.title}>Categorias</h1> */}
+          <div className={styles.cardCategories}>
+            {categoriesList.map((category) => (
+              <Categories key={category.id} category={category.category} image={category.image} />
+            ))}
+          </div>
+        </div>
+
+        <OffersDayComponent produtos={data} />
+
+        {/* <BestSelledComponent produtos={data} /> */}
+
+        <OurProductsComponent produtos={data} />
+
+        <StayInsideComponent />
+      </div>
+
+
 
       <FooterComponent />
 

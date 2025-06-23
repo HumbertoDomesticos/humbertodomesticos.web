@@ -1,28 +1,65 @@
-.productCards{
+.productCards {
     display: flex;
     gap: 15px;
     // justify-content: center;
     align-items: center;
 }
 
-.section{
+.content{
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+}
+
+.introdution {
+    display: flex;
+    gap: 30px;
+    // text-align: center;
+    align-items: center;
+    color: rgb(47, 55, 87);
+
+    span {
+        color: var(--primary-color);
+        font-weight: 600;
+        font-size: 22px;
+        text-align: center;
+    }
+
+    p {
+        margin-top: 15px;
+        font-size: 18px;
+        text-align: start;
+    }
+
+    .spanTeste {
+        margin-top: 15px;
+        font-size: 18px;
+        text-align: start;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+}
+
+
+.section {
     // justify-content: center;
     // align-items: center;
     // display: grid;
     // flex-direction: column;
     // margin: 20px 0;
 
-    .title{
+    .title {
         font-size: 16px;
         margin: 20px 0 10px 0;
         text-transform: uppercase;
     }
 
-    p{
+    p {
         font-size: 12px;
     }
 
-    .cardCategories{
+    .cardCategories {
         display: flex;
         text-align: center;
         gap: 20px;
