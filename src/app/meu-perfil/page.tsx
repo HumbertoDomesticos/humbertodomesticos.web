@@ -88,24 +88,6 @@ export default function Perfil() {
     console.log(localStorage.getItem("user"))
   }, [router]);
 
-  useEffect(() => {
-    getUsuario()
-      .then((resp: Usuario[]) => {
-        setUsuario(resp);
-        const usuarioFiltrado = resp.find(
-          (u) => u.email_usuario === user?.email_usuario
-        );
-        if (usuarioFiltrado) {
-          setUsuarioLogado(usuarioFiltrado);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [user]);
-
-  console.log(usuario?.map((u) => u.id_usuario))
-
   const teste = async () => {
     const response = await fetch("/api/asaas/bank-transfer", {
       method: "GET",
@@ -168,14 +150,17 @@ export default function Perfil() {
                   <p>CPF</p>
                 </div>
 
+                {/* {JSON.stringify(usuarioLogado)} */}
+                {/* {JSON.stringify(user)} */}
+
                 <div className={styles.user}>
                   <div className={styles.flex}>
-                    <p>{usuarioLogado?.nome_usuario}</p>
+                    <p>{user?.nome_usuario}</p>
                     <PencilSimpleLine size={16} />
                   </div>
 
                   <div className={styles.flex}>
-                    <p>{usuarioLogado?.email_usuario}</p>
+                    <p>{user?.email_usuario}</p>
                     <PencilSimpleLine size={16} />
                   </div>
 
@@ -185,12 +170,12 @@ export default function Perfil() {
                   </div>
 
                   <div className={styles.flex}>
-                    <p>{usuarioLogado?.genero_usuario}</p>
+                    <p>{user?.genero_usuario}</p>
                     <PencilSimpleLine size={16} />
                   </div>
 
                   <div className={styles.flex}>
-                    <p>{usuarioLogado?.cpf}</p>
+                    <p>{user?.cpf}</p>
                     <PencilSimpleLine size={16} />
                   </div>
                 </div>
