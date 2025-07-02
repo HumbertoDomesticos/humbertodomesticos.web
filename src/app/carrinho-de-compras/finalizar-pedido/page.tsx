@@ -21,6 +21,7 @@ import {
 import { Produto } from "@/services/routes/produtos/page";
 import { ShowPix } from "@/app/components/show-pix";
 import { ShowBankTransfer } from "@/app/components/show-bank-transfer";
+import { AddressInputs } from "@/app/components/add-address/page";
 import { FooterComponent } from "@/app/components/footer-component";
 
 interface TabPanelProps {
@@ -210,7 +211,7 @@ export default function FinalizarPedido() {
 
 
       <div className={`${styles.content} container_info`}>
-        {/* <div className={styles.section}>
+        {<div className={styles.section}>
           <h1>Endereço de entrega</h1>
           {user?.enderecos?.length! <= 0 ? (
             <Button
@@ -228,9 +229,9 @@ export default function FinalizarPedido() {
           ) : (
             <span>{user?.enderecos?.map((end) => end.rua_endereco)}</span>
           )}
-        </div>
+        </div>}
 
-        {addAddress && <AddressInputs handleClose={handleCloseSetAddress} />} */}
+        {addAddress && <AddressInputs handleClose={handleCloseSetAddress} />}
 
         <div className={styles.section}>
           <h1>Produtos pedidos</h1>
