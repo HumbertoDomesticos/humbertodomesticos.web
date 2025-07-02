@@ -1,35 +1,72 @@
 .content {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 
-    .section{
-        border-radius:  8px;
-        padding: 20px;
-        background-color: var(--secondary-version-color);
+  .section {
+    border-radius: 8px;
+    padding: 20px;
+    background-color: var(--secondary-version-color);
 
-        h1{
-            font-size: 16px;
-            font-weight: 700;
-        }
+    h1 {
+      font-size: 16px;
+      font-weight: 700;
     }
+  }
 }
 
 .route {
+  align-items: anchor-center;
+  color: var(--primary-color);
+  cursor: pointer;
+  padding: 20px 0;
+
+  span {
+    display: flex;
+    gap: 2px;
     align-items: anchor-center;
-    color: var(--primary-color);
-    cursor: pointer;
-    padding: 20px 0;
-  
-    span {
-      display: flex;
-      gap: 2px;
-      align-items: anchor-center;
-    }
-  
-    p {
-      display: flex;
-      gap: 2px;
-      font-size: 14px;
-    }
   }
+
+  p {
+    display: flex;
+    gap: 2px;
+    font-size: 14px;
+  }
+}
+
+.resumoPedido {
+  background-color: #e3ecf3;
+  padding: 16px;
+  border-radius: 8px;
+  max-width: 400px;
+  margin-top: 20px;
+  font-family: "Roboto", sans-serif;
+}
+
+.linhaResumo {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.label {
+  font-weight: 500;
+  color: #333;
+}
+
+.valor {
+  font-weight: 600;
+  color: #111;
+}
+
+.total {
+  border-top: 1px solid #ccc;
+  padding-top: 8px;
+  margin-top: 12px;
+
+  .label,
+  .valor {
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+}

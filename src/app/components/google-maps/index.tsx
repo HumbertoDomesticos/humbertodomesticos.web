@@ -66,7 +66,7 @@ export function DraggableMarker() {
 
 export default function MapPage() {
     return (
-        <MapContainer center={center} zoom={16} scrollWheelZoom={false} style={{ height: "500px", width: "100%" }}>
+        <MapContainer center={center} zoom={16} scrollWheelZoom={false} style={{ height: "500px", width: "100%", borderRadius: "4px" }}>
             <TileLayer
                 attribution='&copy; <Link href="https://www.openstreetmap.org/copyright">OpenStreetMap</Link> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

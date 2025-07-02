@@ -56,12 +56,12 @@ export async function postProdutoEmPedido(
 
 export async function postFecharPedido(
   idUsuario: number,
-  tipoPagamento: "pix"
+  tipoPagamento: "pix" | "transf_banc" | "nenhum"
 ): Promise<AxiosResponse<IPedidos>> {
   try {
     return await axios.post<IPedidos>(
-      `${API_BASE_URL}/${idUsuario}/fechar-pedido`,
-      { tipo_pagamento: tipoPagamento },
+      `${API_BASE_URL}/${idUsuario}/fechar-pedido?tipo_pagamento=${tipoPagamento}`,
+      null,
       {
         headers: {
           "Content-Type": "application/json",
@@ -73,6 +73,7 @@ export async function postFecharPedido(
     throw new Error("Failed to close order");
   }
 }
+
 
 export async function postPedido(
   idUsuario: number

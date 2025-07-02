@@ -10,6 +10,7 @@ import {
   User,
 } from "@phosphor-icons/react";
 import {
+  Avatar,
   Badge,
   badgeClasses,
   IconButton,
@@ -158,7 +159,7 @@ export function HeaderComponent() {
               </div>
               <div className={styles.userProfile}>
                 <Link href="/meu-perfil">
-                  <User size={24} color="white" />
+                  <Avatar sx={{ bgcolor: "var(--primary-color)", width: 34, height: 34 }}></Avatar>
                 </Link>
               </div>
             </div>
@@ -172,7 +173,7 @@ export function HeaderComponent() {
               </Link>
               <div className={styles.userProfile}>
                 <Link href="/login">
-                  <User size={24} color="white" />
+                  <Avatar sx={{ bgcolor: "var(--primary-color)",  width: 34, height: 34 }}></Avatar>
                 </Link>
               </div>
             </div>
@@ -182,18 +183,18 @@ export function HeaderComponent() {
 
       {/* Seção de localização e menus */}
       <div className={styles.secondRow}>
-        <div className={styles.location}>
+        {/* <div className={styles.location}>
           <MapPin size={20} color="var(--primary-color)" />
-          <p onClick={handleOpenAddress} style={{cursor: "pointer"}}>
+          <p onClick={handleOpenAddress} style={{ cursor: "pointer" }}>
             Informe seu <span>CEP</span>
           </p>
 
           {showAddress && <AddressInputs handleClose={handleCloseAddress} />}
-        </div>
+        </div> */}
 
         <div className={styles.menu}>
           <Link href="/quem-somos">Sobre nós</Link>
-          <Link href="/quem-somos">Categorias</Link>
+          <Link href="/#categorias">Categorias</Link>
           <Link href="/#ofertas-dia">Ofertas do dia</Link>
           <Link href="/#mais-vendidos">Nossos Produtos</Link>
           <Link href="/#fique-dentro">Fique por dentro</Link>

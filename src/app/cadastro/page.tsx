@@ -154,7 +154,7 @@ export default function Cadastro() {
               {/* <TextField id="nascimento" label="Data de nascimento" variant="outlined" /> */}
 
               <FormControl>
-                <FormLabel id="genero-usuario-label">Gênero</FormLabel>
+                <FormLabel>Gênero</FormLabel>
                 <RadioGroup
                   aria-labelledby="genero-usuario-label"
                   name="genero-usuario"

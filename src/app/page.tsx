@@ -51,7 +51,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className={`${styles.section} container_info`}>
+        <div className={`${styles.section} container_info`} id="categorias">
           {/* <h1 className={styles.title}>Categorias</h1> */}
           <div className={styles.cardCategories}>
             {categoriesList.map((category) => (

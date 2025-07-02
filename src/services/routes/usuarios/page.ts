@@ -7,7 +7,7 @@ export type UF =
 export type Usuario = {
   id_usuario?: number;
   nome_usuario: string;
-  cpf_usuario: string;
+  cpf: string;
   genero_usuario: string,
   email_usuario: string;
   senha_usuario_temp: string;

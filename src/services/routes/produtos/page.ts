@@ -11,6 +11,10 @@ export interface IImage{
   url_img: string;
 }
 
+interface ICategoria {
+  descritivo_categoria: string
+}
+
 export interface Produto {
   id_produto: number;
   descritivo_produto: string;
@@ -21,6 +25,7 @@ export interface Produto {
   desconto: number;
   preco_descontado: string;
   imagens: IImage[];
+  categorias?: ICategoria[];
 }
 
 // function mapProdutoToProdutoVM(produto: Produto): ProdutoVM {

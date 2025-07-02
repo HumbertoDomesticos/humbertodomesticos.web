@@ -11,22 +11,17 @@ import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import ProdutoParaComprar from "@/app/components/buying-product-component/page";
-// import { useAuth } from "@/app/context/AuthContext";
 import { useProduto } from "@/app/context/ProdutosContext";
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { useAuth } from "@/app/context/AuthContext";
 import {
   getPedidoAberto,
   postFecharPedido,
-  PutQuantidade,
 } from "@/services/routes/pedidos/page";
 import { Produto } from "@/services/routes/produtos/page";
-import { loadStripe } from "@stripe/stripe-js";
-import { POST } from "@/app/api/asaas/pix/route";
-import axios from "axios";
-import { AddressInputs } from "@/app/components/add-address/page";
 import { ShowPix } from "@/app/components/show-pix";
 import { ShowBankTransfer } from "@/app/components/show-bank-transfer";
+import { FooterComponent } from "@/app/components/footer-component";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -70,7 +65,7 @@ export default function FinalizarPedido() {
     setValue(newValue);
   };
 
-  const { carrinho, removerDoCarrinho, limparCarrinho, quantidadeItens } =
+  const { carrinho } =
     useProduto();
 
   const { user } = useAuth();
@@ -178,9 +173,20 @@ export default function FinalizarPedido() {
 
   const handleFecharPedido = async () => {
     await postFecharPedido(user?.id_usuario!, "pix");
-    setShowPagamento(true);
   };
 
+  const handleShowPagamente = () => {
+    setShowPagamento(true)
+  }
+
+  const handleClickPix = () => {
+    gerarPix();
+    handleFecharPedido();
+  }
+  const handleBankTransfer = () => {
+    handleOpenSetBankTransferModal();
+    handleFecharPedido();
+  }
   return (
     <div>
       <HeaderComponent />
@@ -204,7 +210,7 @@ export default function FinalizarPedido() {
 
 
       <div className={`${styles.content} container_info`}>
-        <div className={styles.section}>
+        {/* <div className={styles.section}>
           <h1>Endereço de entrega</h1>
           {user?.enderecos?.length! <= 0 ? (
             <Button
@@ -213,6 +219,7 @@ export default function FinalizarPedido() {
                 backgroundColor: "var(--primary-color)",
                 boxShadow: "none",
                 textTransform: "none",
+                marginTop: "25px"
               }}
               onClick={handleOpenSetAddress}
             >
@@ -223,20 +230,24 @@ export default function FinalizarPedido() {
           )}
         </div>
 
-        {addAddress && <AddressInputs handleClose={handleCloseSetAddress} />}
+        {addAddress && <AddressInputs handleClose={handleCloseSetAddress} />} */}
 
         <div className={styles.section}>
           <h1>Produtos pedidos</h1>
           <ProdutoParaComprar isBuying={true} />
-          <div>
-            <p>Produto ({pedido.map((p) => p.quantidade)})</p>
-            <p>{pedido.map((p) => p.preco)}</p>
-            <p>Frete</p>
-            <p>Grátis</p>
-          </div>
-          <div>
-            <span>Total</span>
-            <span>R${subtotal}</span>
+          <div className={styles.resumoPedido}>
+            <div className={styles.linhaResumo}>
+              <span className={styles.label}>Produto ({pedido.reduce((acc, p) => acc + p.quantidade, 0)})</span>
+              <span className={styles.valor}>R$ {formatter.format(subtotal)}</span>
+            </div>
+            <div className={styles.linhaResumo}>
+              <span className={styles.label}>Frete</span>
+              <span className={styles.valor}>Grátis</span>
+            </div>
+            <div className={`${styles.linhaResumo} ${styles.total}`}>
+              <span className={styles.label}>Total</span>
+              <span className={styles.valor}>R$ {formatter.format(subtotal)}</span>
+            </div>
           </div>
 
           <div>
@@ -244,11 +255,12 @@ export default function FinalizarPedido() {
               variant="contained"
               type="submit"
               role="link"
-              onClick={handleFecharPedido}
+              onClick={handleShowPagamente}
               sx={{
                 backgroundColor: "var(--primary-color)",
                 boxShadow: "none",
                 textTransform: "none",
+                marginTop: "25px"
               }}
             >
               Fazer pedido
@@ -275,7 +287,7 @@ export default function FinalizarPedido() {
                   variant="contained"
                   type="submit"
                   role="link"
-                  onClick={gerarPix}
+                  onClick={handleClickPix}
                   sx={{
                     backgroundColor: "var(--primary-color)",
                     boxShadow: "none",
@@ -301,7 +313,7 @@ export default function FinalizarPedido() {
                   boxShadow: "none",
                   textTransform: "none",
                 }}
-                onClick={handleOpenSetBankTransferModal}
+                onClick={handleBankTransfer}
               >
                 Transferência bancária
               </Button>
@@ -311,6 +323,8 @@ export default function FinalizarPedido() {
           </div>
         )}
       </div>
+
+      <FooterComponent />
     </div>
   );
 }

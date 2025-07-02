@@ -128,8 +128,8 @@ export default function Perfil() {
           sx={{ borderRight: 1, borderColor: 'divider' }}
         >
           <Tab label="Minha conta" {...a11yProps(0)} sx={{ textAlign: "start" }} />
-          <Tab label="Transferências bancárias" {...a11yProps(1)} onClick={teste} />
-          <Tab label="Transferências PIX" {...a11yProps(1)} onClick={pix} />
+          {/* <Tab label="Transferências bancárias" {...a11yProps(1)} onClick={teste} />
+          <Tab label="Transferências PIX" {...a11yProps(1)} onClick={pix} /> */}
         </Tabs>
 
         <TabPanel value={value} index={0}>
@@ -145,7 +145,6 @@ export default function Perfil() {
                 <div className={styles.user_info}>
                   <p>Nome</p>
                   <p>E-mail</p>
-                  <p>Telefone</p>
                   <p>Sexo</p>
                   <p>CPF</p>
                 </div>
@@ -165,11 +164,6 @@ export default function Perfil() {
                   </div>
 
                   <div className={styles.flex}>
-                    <p>(14) 9 9***-**82</p>
-                    <PencilSimpleLine size={16} />
-                  </div>
-
-                  <div className={styles.flex}>
                     <p>{user?.genero_usuario}</p>
                     <PencilSimpleLine size={16} />
                   </div>
@@ -180,16 +174,6 @@ export default function Perfil() {
                   </div>
                 </div>
               </div>
-              {/* 
-                        <div className={styles.profile_picture}>
-                            <Button variant="contained" href="/" sx={{
-                                backgroundColor: "var(--secondary-color)", boxShadow: 'none', color: 'black',
-                                textTransform: "none", width: "220px"
-                            }}>Selecionar foto</Button>
-
-                            <p>Tamanho do arquivo: no máximo 1 MB
-                                Extensão de arquivo: .JPEG, .PNG</p>
-                        </div> */}
             </div>
 
             <div className={styles.button}>
@@ -225,7 +209,7 @@ export default function Perfil() {
           </div>
           {/* </div> */}
         </TabPanel>
-        <TabPanel value={value} index={1}>
+        {/* <TabPanel value={value} index={1}>
           <div className={styles.second_column}>
             <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
               <Note size={22} />
@@ -270,8 +254,11 @@ export default function Perfil() {
             </div>
 
           </div>
-        </TabPanel>
+        </TabPanel> */}
       </Box >
+
+      <FooterComponent />
+
     </>
   );
 }

@@ -9,10 +9,9 @@ export function FooterComponent() {
         <div className={styles.footerColumn}>
           <h4>Empresa</h4>
           <ul>
-            <li>Sobre nós</li>
-            <li>Nossos serviços</li>
-            <li>Política de privacidade</li>
-            <li>Programa de afiliados</li>
+            <Link href={"/quem-somos"}><li>Sobre nós</li></Link>
+            <Link href={"/quem-somos"}><li>Nossos serviços</li></Link>
+            <Link href={"/quem-somos"}><li>Política de privacidade</li></Link>
           </ul>
         </div>
 

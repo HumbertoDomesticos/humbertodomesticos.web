@@ -12,7 +12,17 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ name, price, image }: ProductCardProps) {
+    const formatter = new Intl.NumberFormat("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    });
 
+    function formatarPreco(valor: string): string {
+        const numero = Number(
+            valor.replace("R$", "").replace(/\./g, "").replace(",", ".").trim()
+        );
+        return `R$ ${formatter.format(numero)}`;
+    }
     return (
         <div className={styles.content}>
             <div className={styles.card}>
@@ -20,7 +30,7 @@ export function ProductCard({ name, price, image }: ProductCardProps) {
                     <Image src={image[0].url_img} alt={""} width={180} height={165} />
                 </div>
                 <div className={styles.cardDescription}>
-                    <div className={styles.cardStars}>
+                    {/* <div className={styles.cardStars}>
                         <div className={styles.stars}>
                             <Star size={18} />
                             <Star size={18} />
@@ -29,7 +39,7 @@ export function ProductCard({ name, price, image }: ProductCardProps) {
                             <Star size={18} />
                         </div>
                         <p>5.0</p>
-                    </div>
+                    </div> */}
                     <div>
                         <h1>{name}</h1>
                     </div>
@@ -38,7 +48,7 @@ export function ProductCard({ name, price, image }: ProductCardProps) {
                     </div> */}
                     <div className={styles.cardPrice}>
                         <div className={styles.cardNewPrice}>
-                            <h2>{price}</h2>
+                            <h2>{formatarPreco(price)}</h2>
                         </div>
                     </div>
                 </div>

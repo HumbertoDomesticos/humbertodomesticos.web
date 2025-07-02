@@ -40,7 +40,7 @@ export default function ProdutoParaComprar({
           ...item.produto,
           quantidade: item.quant_produto_em_pedido,
         }));
-        
+
         setProdutosCarrinho(produtos);
       } catch (err) {
         console.error("Failed to fetch cart:", err);
@@ -74,7 +74,7 @@ export default function ProdutoParaComprar({
         )
       );
 
-      
+
 
     }
     console.log("aoba ", produtoId);
@@ -93,9 +93,10 @@ export default function ProdutoParaComprar({
       setProdutosCarrinho((prev) => {
 
         return prev.map((p) =>
-          
+
           p.id_produto === produtoId ? { ...p, quantidade: novaQuantidade } : p
-        )}
+        )
+      }
       );
 
     } else {
@@ -108,6 +109,18 @@ export default function ProdutoParaComprar({
   if (error) return <div className={styles.error}>{error}</div>;
   if (produtosCarrinho.length === 0)
     return <div className={styles.empty}>Your cart is empty</div>;
+
+  const formatter = new Intl.NumberFormat("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  function formatarPreco(valor: string): string {
+    const numero = Number(
+      valor.replace("R$", "").replace(/\./g, "").replace(",", ".").trim()
+    );
+    return `R$ ${formatter.format(numero)}`;
+  }
 
   return (
     <div className={styles.produto}>
@@ -129,7 +142,7 @@ export default function ProdutoParaComprar({
 
               {isBuying ? (
                 <div>
-                  <p>Quantidade: {produto.quantidade}</p>
+                  <b> <p>Quantidade: {produto.quantidade}</p></b>
                 </div>
               ) : (
                 <div className={styles.quantity_container}>
@@ -183,7 +196,7 @@ export default function ProdutoParaComprar({
                         delete novo[produto.id_produto];
                         return novo;
                       });
-                      
+
                     }}
                   ></input>
 
@@ -207,22 +220,26 @@ export default function ProdutoParaComprar({
 
           <div className={styles.prices}>
             <div>
-              <p>De {produto.preco}</p>
-              <span>Por {produto.preco_descontado}</span>
+              <p>De {formatarPreco(produto.preco)}</p>
+              <span>Por {formatarPreco(produto.preco_descontado)}</span>
+
             </div>
-            <span
-              className={styles.excluir}
-              style={{ cursor: "pointer" }}
-              onClick={async () => {
-                await PutQuantidade(user?.id_usuario!, produto.id_produto, 0);
-                removerDoCarrinho(produto.id_produto);
-                setProdutosCarrinho((prev) =>
-                  prev.filter((p) => p.id_produto !== produto.id_produto)
-                );
-              }}
-            >
-              Excluir
-            </span>
+
+            {!isBuying && (
+              <span
+                className={styles.excluir}
+                style={{ cursor: "pointer" }}
+                onClick={async () => {
+                  await PutQuantidade(user?.id_usuario!, produto.id_produto, 0);
+                  removerDoCarrinho(produto.id_produto);
+                  setProdutosCarrinho((prev) =>
+                    prev.filter((p) => p.id_produto !== produto.id_produto)
+                  );
+                }}
+              >
+                Excluir
+              </span>
+            )}
 
           </div>
         </div>

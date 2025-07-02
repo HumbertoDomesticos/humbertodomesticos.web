@@ -77,6 +77,18 @@ export default function CarrinhoCompras() {
   const frete = 0; // pode ser alterado no futuro
   const total = subtotal + frete;
 
+  const formatter = new Intl.NumberFormat("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  function formatarPreco(valor: string): string {
+    const numero = Number(
+      valor.replace("R$", "").replace(/\./g, "").replace(",", ".").trim()
+    );
+    return `R$ ${formatter.format(numero)}`;
+  }
+
   return (
     <div>
       <HeaderComponent />
@@ -127,8 +139,8 @@ export default function CarrinhoCompras() {
               <div className={styles.produtoResumo}>
                 <div>
                   <div className={styles.aside}>
-                    <p>Produto ({quantidade})</p>
-                    <p>R$ {subtotal.toFixed(2).replace(".", ",")}</p>
+                    <p>Produto ({produtosCarrinho.reduce((acc, p) => acc + p.quantidade, 0)})</p>
+                    <p>{formatarPreco(subtotal.toFixed(2).replace(".", ","))}</p>
                   </div>
                   <div className={styles.aside}>
                     <p>Frete</p>
@@ -138,7 +150,7 @@ export default function CarrinhoCompras() {
 
                 <div className={styles.aside}>
                   <span>Total</span>
-                  <span>R$ {total.toFixed(2).replace(".", ",")}</span>
+                  <span>{formatarPreco(total.toFixed(2).replace(".", ","))}</span>
                 </div>
 
                 <Link href="/carrinho-de-compras/finalizar-pedido">

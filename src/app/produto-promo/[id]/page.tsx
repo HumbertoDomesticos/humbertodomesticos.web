@@ -22,31 +22,35 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useProduto } from "@/app/context/ProdutosContext";
 import { useRouter } from "next/navigation";
-import router from "next/router";
 import { useAuth } from "@/app/context/AuthContext";
 import {
   getPedidoAberto,
-  postPedido,
   postProdutoEmPedido,
 } from "@/services/routes/pedidos/page";
+import router from "next/router";
 
 export default function ProductPromoDetails() {
   const { adicionarAoCarrinho, quantidadeItens } = useProduto();
   const { isAuthenticated, user } = useAuth();
   const [data, setData] = useState<Produto[]>([]);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const params = useParams();
   const productId = Number(params.id);
   const [quantity, setQuantity] = useState("1");
+
   useEffect(() => {
     getProduto()
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       .then((resp: any) => {
         setData(resp);
+        const found = resp.find((p: Produto) => p.id_produto === productId);
+        if (found) {
+          setSelectedImage(found.imagens[0]?.url_img || null);
+        }
       })
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [productId]);
 
   const product = data.find((p) => p.id_produto === productId);
 
@@ -66,9 +70,9 @@ export default function ProductPromoDetails() {
     try {
       const quantidade = Number(quantity);
 
-      const orderResponse = await getPedidoAberto(user?.id_usuario!);
-
+      await getPedidoAberto(user?.id_usuario!);
       await postProdutoEmPedido(user?.id_usuario!, productId, quantidade);
+
       alert(
         `${quantidade} unidade(s) de ${product.descritivo_produto} adicionada(s) ao carrinho!`
       );
@@ -79,6 +83,18 @@ export default function ProductPromoDetails() {
     }
   };
 
+  const formatter = new Intl.NumberFormat("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  function formatarPreco(valor: string): string {
+    const numero = Number(
+      valor.replace("R$", "").replace(/\./g, "").replace(",", ".").trim()
+    );
+    return `R$ ${formatter.format(numero)}`;
+  }
+  
   return (
     <>
       <HeaderComponent />
@@ -95,101 +111,126 @@ export default function ProductPromoDetails() {
         </span>
       </div>
 
-      <div
-        className={`${styles.content} container_info`}
-        key={product.id_produto}
-      >
+      <div className={`${styles.content} container_info`} key={product.id_produto}>
         <div className={styles.firstRow}>
           <div className={styles.container_imagens}>
             {product.imagens.map((img, index) => (
-              <Image src={img.url_img} alt="produto" width={107} height={93} key={index}/>
+              <Image
+                key={index}
+                src={img.url_img}
+                alt="produto"
+                width={107}
+                height={93}
+                onClick={() => setSelectedImage(img.url_img)}
+                style={{
+                  cursor: "pointer",
+                  border: selectedImage === img.url_img ? "2px solid var(--primary-color)" : "none",
+                }}
+              />
             ))}
           </div>
+
           <div className={styles.imagem_principal}>
             <Image
-              src={product.imagens[0].url_img}
+              src={selectedImage || product.imagens[0].url_img}
               alt={"produto"}
               width={473}
               height={400}
             />
           </div>
+
           <div className={styles.descricao}>
             <div className={styles.text}>
               <h1>{product.descritivo_produto}</h1>
-              <Rating name="read-only" value={5} readOnly />
-              <p className={styles.preco_original}>De {product.preco}</p>
+              <p style={{ color: "var(--primary-color)" }}>{product.categorias?.map((e) => e.descritivo_categoria)}</p>
+              {/* <Rating name="read-only" value={5} readOnly /> */}
+              <p className={styles.preco_original}>De {formatarPreco(product.preco)}</p>
               <div className={styles.preco}>
                 <p className={styles.preco_atual}>
-                  Por {product.preco_descontado}
+                  Por {formatarPreco(product.preco_descontado)}
                 </p>
-                <span>{product.desconto}% OFF</span>
+                <span>{product.desconto} OFF</span>
               </div>
-              {/* <p className={styles.parcelas}>
-                em 8x de até R$400,00 sem juros no cartão de crédito
-              </p> */}
             </div>
+            {product.estoque_produto > 0 ? (
 
-            <Box sx={{ minWidth: 120, width: "486.43px" }}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">
-                  Quantidade:{" "}
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={quantity}
-                  label="Quantidade"
-                  onChange={handleChange}
-                >
-                  {Array.from({ length: product.estoque_produto }, (_, i) => (
-                    <MenuItem key={i + 1} value={i + 1}>
-                      {i + 1} unidade{i + 1 > 1 ? "s" : ""}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
+              <div>
+                <Box sx={{ minWidth: 120, width: "486.43px" }}>
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">Quantidade: </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={quantity}
+                      label="Quantidade"
+                      onChange={handleChange}
+                    >
+                      {Array.from({ length: Math.min(product.estoque_produto, 7) }, (_, i) => (
+                        <MenuItem key={i + 1} value={String(i + 1)}>
+                          {i + 1} unidade{i + 1 > 1 ? "s" : ""}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Box>
 
-            <div>
-              <p className={styles.estoque}><strong>Em estoque</strong></p>
-              <p className={styles.estoque}>
-                {product.estoque_produto} unidades restantes
-              </p>
-              {/* <input type="submit" value="Continuar a compra" className={styles.continuar} /> */}
+                <div>
+                  <div className={styles.estoqueStyle}>
+                    <p className={styles.estoque}><b>Em estoque:</b></p>
+                    <p className={styles.estoque}>
+                      {product.estoque_produto} unidades restantes
+                    </p>
+                  </div>
 
-              <Link href="/">
-                <Button
-                  variant="contained"
-                  sx={{
-                    backgroundColor: "var(--secondary-color)",
-                    width: "486.43px",
-                    height: "56px",
-                    marginTop: "15px",
-                    textTransform: "none",
-                    color: "black",
-                    boxShadow: "none",
-                  }}
-                >
-                  Continuar a compra
-                </Button>
-              </Link>
+                  <Link href="/">
+                    <Button
+                      variant="contained"
+                      sx={{
+                        backgroundColor: "var(--secondary-color)",
+                        width: "486.43px",
+                        height: "56px",
+                        marginTop: "15px",
+                        textTransform: "none",
+                        color: "black",
+                        boxShadow: "none",
+                      }}
+                    >
+                      Continuar a compra
+                    </Button>
+                  </Link>
 
-              <Button
-                variant="contained"
-                sx={{
-                  backgroundColor: "var(--primary-color)",
-                  width: "486.43px",
-                  height: "56px",
-                  marginTop: "15px",
-                  textTransform: "none",
-                  boxShadow: "none",
-                }}
-                onClick={handleAdicionarAoCarrinho}
-              >
-                Adicionar ao carrinho
-              </Button>
-            </div>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      backgroundColor: "var(--primary-color)",
+                      width: "486.43px",
+                      height: "56px",
+                      marginTop: "15px",
+                      textTransform: "none",
+                      boxShadow: "none",
+                    }}
+                    onClick={handleAdicionarAoCarrinho}
+                  >
+                    Adicionar ao carrinho
+                  </Button>
+                </div>
+              </div>
+
+            ) : (
+              <div className={styles.semEstoque}>
+                <Image
+                  src="/images/1.png"
+                  alt="Logo da Loja"
+                  width={200}
+                  height={200}
+                  priority
+                />
+                <span style={{ fontSize: "18px" }}>O produto está indisponível no momento!</span>
+              </div>
+            )}
           </div>
+
+
         </div>
 
         <div className={styles.secondRow}>
